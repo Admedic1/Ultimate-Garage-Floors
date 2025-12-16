@@ -116,8 +116,20 @@
                             <p class="quiz-time">✓ Takes 30 seconds  ✓ Hassle-free</p>
                         </div>
 
-                        <!-- Name Step -->
+                        <!-- Project Type Step -->
                         <div class="quiz-step hidden" id="step1">
+                            <div class="quiz-progress">
+                                <div class="progress-bar" style="width: 10%"></div>
+                            </div>
+                            <p class="quiz-question-text">Which area are you looking to upgrade?</p>
+                            <div class="quiz-options">
+                                <button type="button" class="quiz-option project-type-option" data-project="garage">🚗 Garage</button>
+                                <button type="button" class="quiz-option project-type-option" data-project="basement">🏠 Basement</button>
+                            </div>
+                        </div>
+
+                        <!-- Name Step -->
+                        <div class="quiz-step hidden" id="step2">
                             <div class="quiz-progress">
                                 <div class="progress-bar" style="width: 20%"></div>
                             </div>
@@ -129,11 +141,11 @@
                         </div>
 
                         <!-- City Step -->
-                        <div class="quiz-step hidden" id="step2">
+                        <div class="quiz-step hidden" id="step3">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 25%"></div>
+                                <div class="progress-bar" style="width: 35%"></div>
                             </div>
-                            <h2 id="step2Title">What city are you in?</h2>
+                            <h2 id="step3Title">What city are you in?</h2>
                             <div class="quiz-question">
                                 <input type="text" class="quiz-input" id="userCity" placeholder="Enter your city" required autocomplete="address-level2">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
@@ -141,11 +153,11 @@
                         </div>
 
                         <!-- Zip Code Step -->
-                        <div class="quiz-step hidden" id="step3">
+                        <div class="quiz-step hidden" id="step4">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 40%"></div>
+                                <div class="progress-bar" style="width: 50%"></div>
                             </div>
-                            <h2 id="step3Title">What's your zip code?</h2>
+                            <h2 id="step4Title">What's your zip code?</h2>
                             <div class="quiz-question">
                                 <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5" pattern="\d{5}" inputmode="numeric" required autocomplete="postal-code">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
@@ -153,11 +165,11 @@
                         </div>
 
                         <!-- Email Step -->
-                        <div class="quiz-step hidden" id="step4">
+                        <div class="quiz-step hidden" id="step5">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 60%"></div>
+                                <div class="progress-bar" style="width: 65%"></div>
                             </div>
-                            <h2 id="step4Title">What's your email?</h2>
+                            <h2 id="step5Title">What's your email?</h2>
                             <div class="quiz-question">
                                 <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com" required autocomplete="email">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
@@ -165,11 +177,11 @@
                         </div>
 
                         <!-- Phone Step -->
-                        <div class="quiz-step hidden" id="step5">
+                        <div class="quiz-step hidden" id="step6">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 80%"></div>
+                                <div class="progress-bar" style="width: 85%"></div>
                             </div>
-                            <h2 id="step5Title">What's your phone number?</h2>
+                            <h2 id="step6Title">What's your phone number?</h2>
                             <div class="quiz-question">
                                 <input type="tel" class="quiz-input" id="userPhone" placeholder="(540) 123-4567" required autocomplete="tel">
                                 <button type="button" class="quiz-btn-next">Get My Free Quote →</button>
@@ -177,7 +189,7 @@
                         </div>
 
                         <!-- Success Step -->
-                        <div class="quiz-step hidden" id="step6">
+                        <div class="quiz-step hidden" id="step7">
                             <div class="quiz-success">
                                 <div class="call-cta-box">
                                     <h1 style="color: #6c5ce7 !important; font-size: 2.5rem; font-weight: 900; margin: 0 0 1rem; text-align: center;">THANK YOU</h1>
