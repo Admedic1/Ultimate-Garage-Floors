@@ -123,7 +123,7 @@
                             </div>
                             <h2>What's your name?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name">
+                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name" required autocomplete="name">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                             </div>
                             <h2 id="step2Title">What city are you in?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userCity" placeholder="Enter your city">
+                                <input type="text" class="quiz-input" id="userCity" placeholder="Enter your city" required autocomplete="address-level2">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                             </div>
                             <h2 id="step3Title">What's your zip code?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5">
+                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5" pattern="\d{5}" inputmode="numeric" required autocomplete="postal-code">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
                             </div>
                         </div>
@@ -159,7 +159,7 @@
                             </div>
                             <h2 id="step4Title">What's your email?</h2>
                             <div class="quiz-question">
-                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com">
+                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com" required autocomplete="email">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                             </div>
                             <h2 id="step5Title">What's your phone number?</h2>
                             <div class="quiz-question">
-                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(540) 123-4567">
+                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(540) 123-4567" required autocomplete="tel">
                                 <button type="button" class="quiz-btn-next">Get My Free Quote →</button>
                             </div>
                         </div>

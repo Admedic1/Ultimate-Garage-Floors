@@ -246,37 +246,46 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             return;
         }
 
-        // Name validation for step 1 (at least 2 characters)
-        if (stepIndex === 1 && value.length < 2) {
-            input.focus();
-            input.style.borderColor = '#ef4444';
-            input.placeholder = 'Name must be at least 2 characters';
-            setTimeout(() => {
-                input.style.borderColor = '';
-                input.placeholder = 'Enter your name';
-            }, 2000);
-            return;
+        // Name validation for step 1 (at least 2 characters, letters and spaces only)
+        if (stepIndex === 1) {
+            const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
+            if (!nameRegex.test(value)) {
+                input.focus();
+                input.style.borderColor = '#ef4444';
+                input.value = '';
+                input.placeholder = value.length < 2 ? 'Name must be at least 2 characters' : 'Please enter a valid name (letters only)';
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.placeholder = 'Enter your name';
+                }, 2000);
+                return;
+            }
         }
 
-        // City validation for step 2 (at least 2 characters)
-        if (stepIndex === 2 && value.length < 2) {
-            input.focus();
-            input.style.borderColor = '#ef4444';
-            input.placeholder = 'City must be at least 2 characters';
-            setTimeout(() => {
-                input.style.borderColor = '';
-                input.placeholder = 'Enter your city';
-            }, 2000);
-            return;
+        // City validation for step 2 (at least 2 characters, letters and spaces only)
+        if (stepIndex === 2) {
+            const cityRegex = /^[a-zA-Z\s'-]{2,50}$/;
+            if (!cityRegex.test(value)) {
+                input.focus();
+                input.style.borderColor = '#ef4444';
+                input.value = '';
+                input.placeholder = value.length < 2 ? 'City must be at least 2 characters' : 'Please enter a valid city name';
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.placeholder = 'Enter your city';
+                }, 2000);
+                return;
+            }
         }
 
-        // Zip code validation for step 3
+        // Zip code validation for step 3 (exactly 5 digits)
         if (stepIndex === 3) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
                 input.style.borderColor = '#ef4444';
-                input.placeholder = 'Please enter a valid 5-digit zip code';
+                input.value = '';
+                input.placeholder = 'Enter a valid 5-digit zip code';
                 setTimeout(() => {
                     input.style.borderColor = '';
                     input.placeholder = 'Enter zip code';
@@ -291,7 +300,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             if (!emailRegex.test(value)) {
                 input.focus();
                 input.style.borderColor = '#ef4444';
-                input.placeholder = 'Please enter a valid email';
+                input.value = '';
+                input.placeholder = 'Enter a valid email (e.g. you@email.com)';
                 setTimeout(() => {
                     input.style.borderColor = '';
                     input.placeholder = 'your@email.com';
@@ -300,13 +310,14 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Phone validation for step 5 (basic check)
+        // Phone validation for step 5 (must have at least 10 digits)
         if (stepIndex === 5) {
-            const phoneRegex = /[\d\(\)\-\s]{10,}/;
-            if (!phoneRegex.test(value)) {
+            const digitsOnly = value.replace(/\D/g, '');
+            if (digitsOnly.length < 10) {
                 input.focus();
                 input.style.borderColor = '#ef4444';
-                input.placeholder = 'Please enter a valid phone number';
+                input.value = '';
+                input.placeholder = 'Enter a valid 10-digit phone number';
                 setTimeout(() => {
                     input.style.borderColor = '';
                     input.placeholder = '(540) 123-4567';
