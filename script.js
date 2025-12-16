@@ -44,21 +44,25 @@ function sendLeadToZapier(userData) {
     console.error("❌ Error sending lead to Zapier:", error);
   });
   
-  // Send to Google Sheets (backup)
+  // Send to Google Sheets (backup) - using form data for reliability
   const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwyIWqYDAlBkTxn9gY7jWUHeZT4RAWH8g4BxJS2cLF5M5lt62C0SP7Co11miz6RvZ8/exec";
   
   if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
+    const formData = new FormData();
+    formData.append('name', payload.name);
+    formData.append('city', payload.city);
+    formData.append('zip', payload.zip);
+    formData.append('email', payload.email);
+    formData.append('phone', payload.phone);
+    formData.append('ab_variant', payload.ab_variant);
+    
     fetch(GOOGLE_SHEET_URL, {
       method: "POST",
-      body: JSON.stringify(payload)
+      body: formData
     })
-    .then(response => {
-      sheetsSuccess = response.ok;
-      console.log(sheetsSuccess ? "✅ Google Sheets backup status:" : "⚠️ Google Sheets backup status:", response.status);
-      return response.json();
-    })
+    .then(response => response.text())
     .then(data => {
-      console.log("Google Sheets backup response:", data);
+      console.log("✅ Google Sheets backup response:", data);
     })
     .catch(error => {
       console.error("❌ Error sending to Google Sheets backup:", error);
