@@ -1,19 +1,20 @@
 function sendLeadToZapier(userData) {
   // VALIDATION: Ensure all fields are filled before sending
-  if (!userData.name || !userData.zip || !userData.email || !userData.phone) {
+  if (!userData.name || !userData.city || !userData.zip || !userData.email || !userData.phone) {
     console.error("❌ BLOCKED: Cannot send incomplete lead data", userData);
     alert("Please fill out all fields before submitting.");
     return false;
   }
   
   // Additional validation: Check for empty/whitespace-only values
-  if (!userData.name.trim() || !userData.zip.trim() || !userData.email.trim() || !userData.phone.trim()) {
+  if (!userData.name.trim() || !userData.city.trim() || !userData.zip.trim() || !userData.email.trim() || !userData.phone.trim()) {
     console.error("❌ BLOCKED: Cannot send blank lead data", userData);
     return false;
   }
   
   const payload = {
     name: userData.name.trim(),
+    city: userData.city.trim(),
     zip: userData.zip.trim(),
     email: userData.email.trim(),
     phone: userData.phone.trim(),
@@ -26,8 +27,8 @@ function sendLeadToZapier(userData) {
   let zapierSuccess = false;
   let sheetsSuccess = false;
   
-  // Send to Zapier (primary) - UPDATE WITH YOUR OWN WEBHOOK URL
-  fetch("https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_HERE", {
+  // Send to Zapier (primary)
+  fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
     method: "POST",
     body: JSON.stringify(payload)
   })
@@ -125,8 +126,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5'],
-        progress: [0, 20, 40, 60, 80, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6'],
+        progress: [0, 16, 32, 48, 64, 80, 100]
     };
 
     function initQuiz() {
@@ -211,7 +212,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
     function handleNextStep(stepIndex) {
         // Prevent double-clicks during submission
-        if (isSubmitting && stepIndex === 4) {
+        if (isSubmitting && stepIndex === 5) {
             console.log("⚠️ Submission already in progress...");
             return;
         }
@@ -226,15 +227,17 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             input.focus();
             input.style.borderColor = '#ef4444';
             input.placeholder = stepIndex === 1 ? 'Please enter your name' : 
-                               stepIndex === 2 ? 'Please enter your zip code' :
-                               stepIndex === 3 ? 'Please enter a valid email' :
+                               stepIndex === 2 ? 'Please enter your city' :
+                               stepIndex === 3 ? 'Please enter your zip code' :
+                               stepIndex === 4 ? 'Please enter a valid email' :
                                'Please enter your phone number';
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.placeholder = stepIndex === 1 ? 'Enter your name' : 
-                                   stepIndex === 2 ? 'Enter zip code' :
-                                   stepIndex === 3 ? 'your@email.com' :
-                                   '(607) 123-4567';
+                                   stepIndex === 2 ? 'Enter your city' :
+                                   stepIndex === 3 ? 'Enter zip code' :
+                                   stepIndex === 4 ? 'your@email.com' :
+                                   '(540) 123-4567';
             }, 2000);
             return;
         }
@@ -251,8 +254,20 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             return;
         }
 
-        // Zip code validation for step 2
-        if (stepIndex === 2) {
+        // City validation for step 2 (at least 2 characters)
+        if (stepIndex === 2 && value.length < 2) {
+            input.focus();
+            input.style.borderColor = '#ef4444';
+            input.placeholder = 'City must be at least 2 characters';
+            setTimeout(() => {
+                input.style.borderColor = '';
+                input.placeholder = 'Enter your city';
+            }, 2000);
+            return;
+        }
+
+        // Zip code validation for step 3
+        if (stepIndex === 3) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
@@ -266,8 +281,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Email validation for step 3
-        if (stepIndex === 3) {
+        // Email validation for step 4
+        if (stepIndex === 4) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(value)) {
                 input.focus();
@@ -281,8 +296,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Phone validation for step 4 (basic check)
-        if (stepIndex === 4) {
+        // Phone validation for step 5 (basic check)
+        if (stepIndex === 5) {
             const phoneRegex = /[\d\(\)\-\s]{10,}/;
             if (!phoneRegex.test(value)) {
                 input.focus();
@@ -290,7 +305,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                 input.placeholder = 'Please enter a valid phone number';
                 setTimeout(() => {
                     input.style.borderColor = '';
-                    input.placeholder = '(607) 123-4567';
+                    input.placeholder = '(540) 123-4567';
                 }, 2000);
                 return;
             }
@@ -300,10 +315,12 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             userData.name = value;
             updatePersonalizedMessages(value);
         } else if (stepIndex === 2) {
-            userData.zip = value;
+            userData.city = value;
         } else if (stepIndex === 3) {
-            userData.email = value;
+            userData.zip = value;
         } else if (stepIndex === 4) {
+            userData.email = value;
+        } else if (stepIndex === 5) {
             userData.phone = value;
 
             // Set loading state
@@ -343,19 +360,20 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }, 2000);
         }
 
-        if (stepIndex < 4) {
+        if (stepIndex < 5) {
             showStep(stepIndex + 1);
         } else {
-            showStep(5);
+            showStep(6);
         }
     }
 
     function getInputForStep(stepIndex) {
         const inputs = {
             1: document.getElementById('userName'),
-            2: document.getElementById('userZip'),
-            3: document.getElementById('userEmail'),
-            4: document.getElementById('userPhone')
+            2: document.getElementById('userCity'),
+            3: document.getElementById('userZip'),
+            4: document.getElementById('userEmail'),
+            5: document.getElementById('userPhone')
         };
         return inputs[stepIndex];
     }
@@ -364,10 +382,12 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         const step2Title = document.getElementById('step2Title');
         const step3Title = document.getElementById('step3Title');
         const step4Title = document.getElementById('step4Title');
+        const step5Title = document.getElementById('step5Title');
 
-        if (step2Title) step2Title.textContent = `Hi ${name}! What's your zip code?`;
-        if (step3Title) step3Title.textContent = `${name}, what's your email?`;
-        if (step4Title) step4Title.textContent = `Last step ${name}! What's your phone number?`;
+        if (step2Title) step2Title.textContent = `Hi ${name}! What city are you in?`;
+        if (step3Title) step3Title.textContent = `${name}, what's your zip code?`;
+        if (step4Title) step4Title.textContent = `${name}, what's your email?`;
+        if (step5Title) step5Title.textContent = `Last step ${name}! What's your phone number?`;
     }
 
     function showStep(stepIndex) {
@@ -400,11 +420,11 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         // Hide footer on success step
         const footer = document.getElementById('quizFooter');
         if (footer) {
-            footer.style.display = stepIndex === 5 ? 'none' : 'block';
+            footer.style.display = stepIndex === 6 ? 'none' : 'block';
         }
 
         // Log when thank-you page is shown
-        if (stepIndex === 5) {
+        if (stepIndex === 6) {
             console.log('📄 Thank you page (Step 5) now visible to user');
             
             // Remove sticky mode on thank you page

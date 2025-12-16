@@ -97,11 +97,12 @@ body {
 
 .badge-new {
   background: #000000;
-  color: white;
+  color: #ffffff;
   padding: 0.2rem 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 3px;
   font-size: 0.7rem;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
