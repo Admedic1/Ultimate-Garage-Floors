@@ -44,8 +44,8 @@ function sendLeadToZapier(userData) {
     console.error("❌ Error sending lead to Zapier:", error);
   });
   
-  // Send to Google Sheets (backup) - UPDATE WITH YOUR OWN URL
-  const GOOGLE_SHEET_URL = "PASTE_YOUR_GOOGLE_SHEETS_URL_HERE";
+  // Send to Google Sheets (backup)
+  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwyIWqYDAlBkTxn9gY7jWUHeZT4RAWH8g4BxJS2cLF5M5lt62C0SP7Co11miz6RvZ8/exec";
   
   if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
     fetch(GOOGLE_SHEET_URL, {
