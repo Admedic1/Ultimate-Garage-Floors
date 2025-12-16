@@ -1562,13 +1562,41 @@ body.quiz-modal-open {
   }
   
   .ab-test-image {
-    max-width: 180px;
-    margin: 0.25rem auto;
-    border-radius: 8px;
+    max-width: 140px;
+    margin: 0.15rem auto;
+    border-radius: 6px;
   }
   
   .winchester-callout {
     display: none !important;
+  }
+  
+  .quiz-card {
+    padding: 20px 16px 24px !important;
+  }
+  
+  .quiz-question-text {
+    font-size: 1.25rem !important;
+    margin: 0.25rem 0 1rem !important;
+  }
+  
+  .quiz-options {
+    gap: 10px !important;
+  }
+  
+  .quiz-option {
+    padding: 10px 16px !important;
+    min-height: 40px !important;
+  }
+  
+  .hero-urgency {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .quiz-time {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.75rem !important;
   }
 
   .value-price-block {
