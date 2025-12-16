@@ -1669,7 +1669,7 @@ body.quiz-modal-open {
 
   .hero {
     padding: 0 0 0.5rem;
-    margin-top: -0.75rem;
+    margin-top: -1.25rem;
   }
   
   .hero-simple {
@@ -1693,7 +1693,7 @@ body.quiz-modal-open {
   }
   
   .ab-test-image {
-    max-width: 130px;
+    max-width: 200px;
     margin: 0.1rem auto;
   }
   
