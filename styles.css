@@ -159,39 +159,6 @@ body {
   gap: 1.5rem;
 }
 
-.google-maps-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.gmaps-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.gmaps-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.gmaps-stars {
-  color: #FBBC04;
-  font-size: 0.9rem;
-  line-height: 1;
-  margin-bottom: 0.2rem;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.gmaps-text {
-  font-size: 0.65rem;
-  color: var(--text-soft);
-  font-weight: 500;
-  white-space: nowrap;
-}
-
 .trustpilot-badge {
   display: flex;
   flex-direction: column;
@@ -1526,10 +1493,6 @@ body.quiz-modal-open {
 
   .trustpilot-stars {
     font-size: 0.8rem;
-  }
-
-  .google-maps-badge {
-    display: none;
   }
 
   .trustpilot-text {
