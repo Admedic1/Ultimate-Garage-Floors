@@ -109,10 +109,11 @@ body {
 }
 
 .banner-text {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   color: white;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 /* Top bar */
@@ -1552,8 +1553,8 @@ body.quiz-modal-open {
   }
 
   .banner-text {
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
   }
 
   .hero-subtext {
