@@ -1696,13 +1696,13 @@ body.quiz-modal-open {
   }
 
   .hero {
-    padding: 0.5rem 0 1rem;
+    padding: 0.25rem 0 0.75rem;
   }
 
   .hero-headline-main {
     font-size: 1.3rem;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
+    line-height: 1.15;
+    margin-bottom: 0.15rem;
   }
 
   .big-arrow-container {
@@ -1723,7 +1723,7 @@ body.quiz-modal-open {
   }
 
   .top-bar-inner {
-    padding: 0.65rem 1rem;
+    padding: 0.5rem 0.75rem;
     flex-wrap: wrap;
   }
 
