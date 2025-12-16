@@ -429,14 +429,31 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
         // Log when thank-you page is shown
         if (stepIndex === 6) {
-            console.log('📄 Thank you page (Step 5) now visible to user');
+            console.log('📄 Thank you page now visible to user');
+            
+            // Update URL for conversion tracking
+            window.history.pushState({}, '', '?thank-you=1');
+            console.log('📍 URL updated to /?thank-you=1 for conversion tracking');
             
             // Remove sticky mode on thank you page
             removeQuizSticky();
             
+            // Fire Meta Pixel Lead event
             if (typeof fbq === 'function') {
                 fbq('track', 'Lead', {value: 0.00, currency: 'USD'});
-                console.log("🔥 REAL Facebook Lead event fired on thank-you step");
+                console.log("🔥 Meta Pixel Lead event fired");
+            }
+            
+            // Fire Google Ads conversion event
+            if (typeof gtag === 'function') {
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL'
+                });
+                gtag('event', 'generate_lead', {
+                    'event_category': 'Lead',
+                    'event_label': 'Quiz Completion'
+                });
+                console.log("🔥 Google Analytics lead event fired");
             }
         }
 
