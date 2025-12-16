@@ -1562,9 +1562,13 @@ body.quiz-modal-open {
   }
   
   .ab-test-image {
-    max-width: 240px;
-    margin: 0.5rem auto;
+    max-width: 180px;
+    margin: 0.25rem auto;
     border-radius: 8px;
+  }
+  
+  .winchester-callout {
+    display: none !important;
   }
 
   .value-price-block {
@@ -1664,21 +1668,21 @@ body.quiz-modal-open {
   }
 
   .hero {
-    padding: 1rem 0 1.5rem;
+    padding: 0.5rem 0 1rem;
   }
 
   .hero-headline-main {
-    font-size: 1.4rem;
-    line-height: 1.25;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
   }
 
   .big-arrow-container {
-    margin: 0.4rem 0 0.6rem;
+    display: none;
   }
 
-  .big-arrow {
-    width: 28px;
-    height: 36px;
+  .hero-quiz {
+    margin-top: 0.5rem;
   }
 
   .hero-subheadline {
