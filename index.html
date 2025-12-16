@@ -585,18 +585,22 @@
           });
         }
 
-        // Exit intent popup - only triggers on true exit intent
+        // Exit intent popup - only triggers after 7 seconds on page
         const exitPopup = document.getElementById('exitPopup');
         let exitIntentTriggered = false;
-        let mouseLeaveTime = null;
+        let exitPopupEnabled = false;
+        const pageLoadTime = Date.now();
+
+        // Enable exit popup after 7 seconds on page
+        setTimeout(function() {
+          exitPopupEnabled = true;
+          console.log('⏰ Exit popup now enabled (7 seconds passed)');
+        }, 7000);
 
         // Track mouse leaving viewport
         document.addEventListener('mouseleave', function(e) {
-          if (!exitIntentTriggered && e.clientY <= 0) {
-            // Mouse left through the top of the viewport
-            mouseLeaveTime = Date.now();
-            
-            // Show popup immediately on exit intent
+          if (!exitIntentTriggered && exitPopupEnabled && e.clientY <= 0) {
+            // Mouse left through the top of the viewport (after 7 seconds)
             setTimeout(function() {
               if (!exitIntentTriggered) {
                 exitIntentTriggered = true;
