@@ -19,6 +19,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     
+    <!-- Mobile optimizations - hide arrow and make quiz visible above fold -->
+    <style>
+        @media (max-width: 768px) {
+            .big-arrow-container, .big-arrow, .hide-mobile {
+                display: none !important;
+                height: 0 !important;
+                visibility: hidden !important;
+            }
+            .ab-test-image { max-width: 140px !important; margin: 0.1rem auto 0 !important; }
+            .winchester-callout { display: none !important; }
+        }
+    </style>
+    
     <!-- Meta Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
