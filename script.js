@@ -166,13 +166,20 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     
     // If Variant B, show the before/after image
     if (variant === 'B') {
-        document.addEventListener('DOMContentLoaded', function() {
+        function showImage() {
             const abTestImage = document.getElementById('abTestImage');
             if (abTestImage) {
                 abTestImage.style.display = 'block';
                 console.log('🧪 A/B Test: Showing before/after image (Variant B)');
             }
-        });
+        }
+        
+        // Try immediately, then on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showImage);
+        } else {
+            showImage();
+        }
     }
     
     // Send variant to Google Analytics
