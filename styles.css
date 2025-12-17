@@ -1686,9 +1686,22 @@ body.quiz-modal-open {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .top-banner {
+    padding: 0.3rem 0 !important;
+  }
+  
+  .top-bar {
+    position: relative !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .top-bar-inner {
+    padding: 0.5rem 0.75rem !important;
+  }
+  
   .hero {
-    padding: 0 0 0.5rem !important;
-    margin-top: -2rem !important;
+    padding: 0.5rem 0 0.75rem !important;
+    margin-top: 0 !important;
   }
   
   .hero-simple {
@@ -1698,7 +1711,7 @@ body.quiz-modal-open {
   .hero-headline-main {
     font-size: 1rem !important;
     line-height: 1.15;
-    margin-bottom: 0.25rem !important;
+    margin-bottom: 0.5rem !important;
     margin-top: 0;
     padding-top: 0;
   }
@@ -1714,7 +1727,7 @@ body.quiz-modal-open {
   /* Make before/after image compact on mobile - small enough to show quiz */
   .ab-test-image {
     max-width: 140px !important;
-    margin: 0.5rem auto 0.75rem !important;
+    margin: 0.75rem auto 0.75rem !important;
     display: block !important;
   }
   
