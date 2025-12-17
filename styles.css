@@ -1687,8 +1687,8 @@ body.quiz-modal-open {
   }
 
   .hero {
-    padding: 0 0 0.25rem;
-    margin-top: -3rem;
+    padding: 0 0 0.5rem !important;
+    margin-top: -2rem !important;
   }
   
   .hero-simple {
@@ -1696,9 +1696,9 @@ body.quiz-modal-open {
   }
 
   .hero-headline-main {
-    font-size: 1rem;
+    font-size: 1rem !important;
     line-height: 1.15;
-    margin-bottom: 0;
+    margin-bottom: 0.25rem !important;
     margin-top: 0;
     padding-top: 0;
   }
@@ -1711,15 +1711,15 @@ body.quiz-modal-open {
     padding: 0 !important;
   }
 
-  .hero-quiz {
-    margin-top: 0;
-  }
-  
   /* Make before/after image compact on mobile - small enough to show quiz */
   .ab-test-image {
     max-width: 140px !important;
-    margin: 0.25rem auto 0.15rem !important;
+    margin: 0.5rem auto 0.75rem !important;
     display: block !important;
+  }
+  
+  .hero-quiz {
+    margin-top: 0.5rem !important;
   }
   
   .quiz-card {
