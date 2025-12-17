@@ -1,3 +1,67 @@
+// =========================================
+//     PHONE VERIFICATION (OTP) FUNCTIONS
+// =========================================
+
+let verifiedPhone = null; // Store the verified phone number
+
+async function sendOTP(phone) {
+  const digitsOnly = phone.replace(/\D/g, '');
+  if (digitsOnly.length < 10) {
+    throw new Error('Please enter a valid 10-digit phone number');
+  }
+
+  console.log('📱 Sending OTP to:', phone);
+  
+  const response = await fetch('/api/send-otp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ phone: digitsOnly })
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to send verification code');
+  }
+
+  console.log('✅ OTP sent successfully');
+  return data;
+}
+
+async function verifyOTP(phone, code) {
+  const digitsOnly = phone.replace(/\D/g, '');
+  
+  console.log('🔐 Verifying OTP for:', phone);
+  
+  const response = await fetch('/api/verify-otp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ phone: digitsOnly, code: code })
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error || 'Verification failed');
+  }
+
+  if (data.status === 'approved') {
+    verifiedPhone = digitsOnly;
+    console.log('✅ Phone verified successfully');
+    return true;
+  }
+
+  throw new Error('Invalid code. Please try again.');
+}
+
+// =========================================
+//     LEAD SUBMISSION FUNCTION
+// =========================================
+
 function sendLeadToZapier(userData) {
   // VALIDATION: Ensure all fields are filled before sending
   if (!userData.name || !userData.city || !userData.zip || !userData.email || !userData.phone || !userData.project_type) {
@@ -19,6 +83,7 @@ function sendLeadToZapier(userData) {
     zip: userData.zip.trim(),
     email: userData.email.trim(),
     phone: userData.phone.trim(),
+    phone_verified: userData.phone_verified ? 'yes' : 'no',
     ab_variant: window.abTestVariant || 'unknown'
   };
   
@@ -56,6 +121,7 @@ function sendLeadToZapier(userData) {
     formData.append('zip', payload.zip);
     formData.append('email', payload.email);
     formData.append('phone', payload.phone);
+    formData.append('phone_verified', payload.phone_verified);
     formData.append('ab_variant', payload.ab_variant);
     
     fetch(GOOGLE_SHEET_URL, {
@@ -139,7 +205,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     function initQuiz() {
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
         const projectTypeOptions = document.querySelectorAll('.project-type-option');
-        const nextButtons = document.querySelectorAll('.quiz-btn-next');
+        // Get next buttons excluding the OTP-specific buttons
+        const nextButtons = document.querySelectorAll('.quiz-btn-next:not(#sendCodeBtn):not(#verifyCodeBtn)');
 
         quizOptions.forEach(option => {
             option.addEventListener('click', function(e) {
@@ -165,7 +232,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             });
         });
 
-        const inputs = document.querySelectorAll('.quiz-input');
+        // Get inputs excluding phone and OTP inputs (handled separately)
+        const inputs = document.querySelectorAll('.quiz-input:not(#userPhone):not(#otpCode)');
         inputs.forEach((input, index) => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -174,6 +242,201 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                 }
             });
         });
+
+        // Initialize OTP verification handlers
+        initOTPHandlers();
+    }
+
+    // =========================================
+    //     OTP VERIFICATION UI HANDLERS
+    // =========================================
+
+    function initOTPHandlers() {
+        const sendCodeBtn = document.getElementById('sendCodeBtn');
+        const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+        const resendCodeBtn = document.getElementById('resendCodeBtn');
+        const changePhoneBtn = document.getElementById('changePhoneBtn');
+        const phoneInput = document.getElementById('userPhone');
+        const otpInput = document.getElementById('otpCode');
+        const phoneInputPhase = document.getElementById('phoneInputPhase');
+        const otpVerifyPhase = document.getElementById('otpVerifyPhase');
+        const phoneDisplay = document.getElementById('phoneDisplay');
+
+        // Send Code button click
+        if (sendCodeBtn) {
+            sendCodeBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const phone = phoneInput.value.trim();
+                const digitsOnly = phone.replace(/\D/g, '');
+                
+                if (digitsOnly.length < 10) {
+                    phoneInput.focus();
+                    phoneInput.style.borderColor = '#ef4444';
+                    phoneInput.value = '';
+                    phoneInput.placeholder = 'Enter a valid 10-digit phone number';
+                    setTimeout(() => {
+                        phoneInput.style.borderColor = '';
+                        phoneInput.placeholder = '(540) 123-4567';
+                    }, 2000);
+                    return;
+                }
+
+                // Show loading state
+                sendCodeBtn.disabled = true;
+                sendCodeBtn.textContent = '📱 Sending code...';
+
+                try {
+                    await sendOTP(phone);
+                    
+                    // Switch to OTP verification phase
+                    phoneInputPhase.classList.add('hidden');
+                    otpVerifyPhase.classList.remove('hidden');
+                    phoneDisplay.textContent = 'Code sent to: ' + formatPhoneDisplay(phone);
+                    
+                    // Focus on OTP input
+                    setTimeout(() => otpInput.focus(), 100);
+                    
+                    console.log('✅ Switched to OTP verification phase');
+                } catch (error) {
+                    console.error('❌ Error sending OTP:', error);
+                    alert(error.message || 'Failed to send verification code. Please try again.');
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.textContent = 'Send Verification Code →';
+                }
+            });
+        }
+
+        // Phone input Enter key
+        if (phoneInput) {
+            phoneInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendCodeBtn.click();
+                }
+            });
+        }
+
+        // Verify Code button click
+        if (verifyCodeBtn) {
+            verifyCodeBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const phone = phoneInput.value.trim();
+                const code = otpInput.value.trim();
+                
+                if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+                    otpInput.focus();
+                    otpInput.style.borderColor = '#ef4444';
+                    otpInput.value = '';
+                    otpInput.placeholder = 'Enter 6-digit code';
+                    setTimeout(() => {
+                        otpInput.style.borderColor = '';
+                    }, 2000);
+                    return;
+                }
+
+                // Show loading state
+                verifyCodeBtn.disabled = true;
+                verifyCodeBtn.textContent = '🔐 Verifying...';
+
+                try {
+                    await verifyOTP(phone, code);
+                    
+                    // Phone verified! Store and proceed
+                    userData.phone = phone;
+                    userData.phone_verified = true;
+                    
+                    console.log('✅ Phone verified! Submitting lead...');
+                    
+                    // Submit the lead
+                    const sendSuccess = sendLeadToZapier(userData);
+                    
+                    if (sendSuccess) {
+                        showStep(7); // Go to thank you page
+                    } else {
+                        throw new Error('Failed to submit lead');
+                    }
+                } catch (error) {
+                    console.error('❌ Verification error:', error);
+                    otpInput.value = '';
+                    otpInput.style.borderColor = '#ef4444';
+                    otpInput.placeholder = error.message || 'Invalid code';
+                    verifyCodeBtn.disabled = false;
+                    verifyCodeBtn.textContent = 'Verify & Get My Quote →';
+                    setTimeout(() => {
+                        otpInput.style.borderColor = '';
+                        otpInput.placeholder = 'Enter 6-digit code';
+                    }, 2000);
+                }
+            });
+        }
+
+        // OTP input Enter key
+        if (otpInput) {
+            otpInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    verifyCodeBtn.click();
+                }
+            });
+        }
+
+        // Resend Code button
+        if (resendCodeBtn) {
+            resendCodeBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const phone = phoneInput.value.trim();
+                
+                resendCodeBtn.disabled = true;
+                resendCodeBtn.textContent = 'Sending...';
+
+                try {
+                    await sendOTP(phone);
+                    resendCodeBtn.textContent = '✅ Code sent!';
+                    setTimeout(() => {
+                        resendCodeBtn.disabled = false;
+                        resendCodeBtn.textContent = 'Resend Code';
+                    }, 3000);
+                } catch (error) {
+                    alert(error.message || 'Failed to resend code. Please try again.');
+                    resendCodeBtn.disabled = false;
+                    resendCodeBtn.textContent = 'Resend Code';
+                }
+            });
+        }
+
+        // Change Phone button
+        if (changePhoneBtn) {
+            changePhoneBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Switch back to phone input phase
+                otpVerifyPhase.classList.add('hidden');
+                phoneInputPhase.classList.remove('hidden');
+                
+                // Reset states
+                phoneInput.value = '';
+                otpInput.value = '';
+                sendCodeBtn.disabled = false;
+                sendCodeBtn.textContent = 'Send Verification Code →';
+                verifyCodeBtn.disabled = false;
+                verifyCodeBtn.textContent = 'Verify & Get My Quote →';
+                
+                setTimeout(() => phoneInput.focus(), 100);
+            });
+        }
+    }
+
+    function formatPhoneDisplay(phone) {
+        const digits = phone.replace(/\D/g, '');
+        if (digits.length === 10) {
+            return '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + '-' + digits.slice(6);
+        }
+        return phone;
     }
 
     function handleProjectTypeQuestion(e) {
@@ -344,21 +607,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Phone validation for step 6 (must have at least 10 digits)
-        if (stepIndex === 6) {
-            const digitsOnly = value.replace(/\D/g, '');
-            if (digitsOnly.length < 10) {
-                input.focus();
-                input.style.borderColor = '#ef4444';
-                input.value = '';
-                input.placeholder = 'Enter a valid 10-digit phone number';
-                setTimeout(() => {
-                    input.style.borderColor = '';
-                    input.placeholder = '(540) 123-4567';
-                }, 2000);
-                return;
-            }
-        }
+        // Note: Phone validation (step 6) is now handled by OTP verification handlers
 
         if (stepIndex === 2) {
             userData.name = value;
@@ -369,51 +618,15 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             userData.zip = value;
         } else if (stepIndex === 5) {
             userData.email = value;
-        } else if (stepIndex === 6) {
-            userData.phone = value;
-
-            // Set loading state
-            isSubmitting = true;
-            const btn = document.querySelector('.quiz-btn-next');
-            const originalText = btn ? btn.textContent : '';
-            if (btn) {
-                btn.disabled = true;
-                btn.style.opacity = '0.6';
-                btn.textContent = '⏳ Submitting...';
-            }
-
-            // SEND TO ZAPIER & GOOGLE SHEETS - function is in global scope
-            const sendSuccess = sendLeadToZapier(userData);
-            
-            if (!sendSuccess) {
-                // Reset if validation failed
-                isSubmitting = false;
-                if (btn) {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.textContent = originalText;
-                }
-                console.error("❌ Failed to send lead - validation error");
-                alert("There was an error submitting your information. Please check all fields and try again.");
-                return;
-            }
-
-            // Success - proceed to thank you page
-            setTimeout(() => {
-                isSubmitting = false;
-                if (btn) {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.textContent = originalText;
-                }
-            }, 2000);
         }
+        // Note: Step 6 (phone) is now handled by OTP verification handlers, not here
 
+        // After step 5 (email), go to step 6 (phone with OTP verification)
+        // The OTP handlers will take over from there
         if (stepIndex < 6) {
             showStep(stepIndex + 1);
-        } else {
-            showStep(7);
         }
+        // Don't auto-advance from step 6 - OTP verification handles that
     }
 
     function getInputForStep(stepIndex) {

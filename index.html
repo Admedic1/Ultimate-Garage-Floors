@@ -177,15 +177,30 @@
                             </div>
                         </div>
 
-                        <!-- Phone Step -->
+                        <!-- Phone Step with OTP Verification -->
                         <div class="quiz-step hidden" id="step6">
                             <div class="quiz-progress">
                                 <div class="progress-bar" style="width: 85%"></div>
                             </div>
                             <h2 id="step6Title">What's your phone number?</h2>
-                            <div class="quiz-question">
+                            
+                            <!-- Phone Input Phase -->
+                            <div class="quiz-question" id="phoneInputPhase">
                                 <input type="tel" class="quiz-input" id="userPhone" placeholder="(540) 123-4567" required autocomplete="tel">
-                                <button type="button" class="quiz-btn-next">Get My Free Quote →</button>
+                                <button type="button" class="quiz-btn-next" id="sendCodeBtn">Send Verification Code →</button>
+                                <p style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; text-align: center;">📱 We'll text you a code to verify your number</p>
+                            </div>
+                            
+                            <!-- OTP Verification Phase (hidden initially) -->
+                            <div class="quiz-question hidden" id="otpVerifyPhase">
+                                <p style="color: #22c55e; font-weight: 600; margin-bottom: 0.75rem; text-align: center;">✅ Code sent! Check your phone</p>
+                                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 0.75rem; text-align: center;" id="phoneDisplay"></p>
+                                <input type="text" class="quiz-input" id="otpCode" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" pattern="\d{6}" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; font-weight: 700;">
+                                <button type="button" class="quiz-btn-next" id="verifyCodeBtn">Verify & Get My Quote →</button>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
+                                    <button type="button" id="resendCodeBtn" style="background: none; border: none; color: #6c5ce7; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Resend Code</button>
+                                    <button type="button" id="changePhoneBtn" style="background: none; border: none; color: #64748b; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Change Number</button>
+                                </div>
                             </div>
                         </div>
 
