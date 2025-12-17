@@ -250,6 +250,18 @@ body {
   animation: bounce 2s infinite;
 }
 
+/* Hide arrow on mobile for variant B - quiz must be visible */
+@media (max-width: 768px) {
+  .big-arrow-container,
+  .big-arrow {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
 .big-arrow {
   width: 32px;
   height: 42px;
@@ -1677,7 +1689,7 @@ body.quiz-modal-open {
   }
 
   .hero-headline-main {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.15;
     margin-bottom: 0;
     margin-top: 0;
@@ -1686,16 +1698,20 @@ body.quiz-modal-open {
 
   .big-arrow-container {
     display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .hero-quiz {
     margin-top: 0;
   }
   
-  /* Make before/after image compact on mobile */
+  /* Make before/after image compact on mobile - small enough to show quiz */
   .ab-test-image {
-    max-width: 180px;
-    margin: 0.25rem auto 0.15rem;
+    max-width: 140px !important;
+    margin: 0.1rem auto 0 !important;
   }
   
   .quiz-card {
