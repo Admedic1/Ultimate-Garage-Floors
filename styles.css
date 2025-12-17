@@ -250,11 +250,12 @@ body {
   animation: bounce 2s infinite;
 }
 
-/* Hide arrow on mobile for variant B - quiz must be visible */
+/* Hide arrow and other desktop-only elements on mobile for quiz visibility */
 @media (max-width: 768px) {
   .big-arrow-container,
   .big-arrow,
-  .hide-mobile {
+  .hide-mobile,
+  .desktop-only {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -263,6 +264,8 @@ body {
     opacity: 0 !important;
     max-height: 0 !important;
     overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
   }
 }
 

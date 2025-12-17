@@ -22,13 +22,17 @@
     <!-- Mobile optimizations - hide arrow and make quiz visible above fold -->
     <style>
         @media (max-width: 768px) {
-            .big-arrow-container, .big-arrow, .hide-mobile {
+            .big-arrow-container, .big-arrow, .hide-mobile, .desktop-only {
                 display: none !important;
                 height: 0 !important;
                 visibility: hidden !important;
+                position: absolute !important;
+                left: -9999px !important;
             }
-            .ab-test-image { max-width: 140px !important; margin: 0.1rem auto 0 !important; }
+            .ab-test-image { max-width: 120px !important; margin: 0 auto !important; }
             .winchester-callout { display: none !important; }
+            .hero { padding: 0 !important; margin-top: -2.5rem !important; }
+            .hero-headline-main { font-size: 0.95rem !important; margin-bottom: 0 !important; }
         }
     </style>
     
@@ -108,18 +112,12 @@
                     <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
                 </div>
                 
-                <!-- Arrow hidden on mobile - quiz must be above fold -->
-                <div class="big-arrow-container hide-mobile" id="bigArrowContainer">
-                    <svg class="big-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Arrow - only show on desktop, hidden via CSS on mobile -->
+                <div class="big-arrow-container desktop-only" id="bigArrowContainer" style="margin: 0.25rem 0;">
+                    <svg class="big-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 32px;">
                         <path d="M12 2L12 28M12 28L6 22M12 28L18 22" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <script>
-                    // Immediately hide arrow on mobile for quiz visibility
-                    if (window.innerWidth <= 768) {
-                        document.getElementById('bigArrowContainer').style.display = 'none';
-                    }
-                </script>
                 
                 <div class="hero-quiz">
                     <p class="winchester-callout" style="color: #111827; font-weight: 800; font-size: 1.25rem; margin: 0 0 1rem; text-align: center; background: #ffffff; padding: 0.75rem 1.25rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">📍 For Winchester & Nearby Homeowners Only</p>
