@@ -200,35 +200,39 @@
                             </div>
                         </div>
 
-                        <!-- Phone Step with OTP Verification -->
+                        <!-- Phone Step -->
                         <div class="quiz-step hidden" id="step7">
                             <div class="quiz-progress">
                                 <div class="progress-bar" style="width: 85%"></div>
                             </div>
                             <h2 id="step7Title">What's your phone number?</h2>
-                            
-                            <!-- Phone Input Phase -->
-                            <div class="quiz-question" id="phoneInputPhase">
+                            <div class="quiz-question">
                                 <input type="tel" class="quiz-input" id="userPhone" placeholder="(540) 123-4567" required autocomplete="tel">
-                                <button type="button" class="quiz-btn-next" id="sendCodeBtn">Send Verification Code →</button>
+                                <button type="button" class="quiz-btn-next" id="sendCodeBtn">Continue →</button>
                                 <p style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; text-align: center;">📱 We'll text you a code to verify your number</p>
                             </div>
-                            
-                            <!-- OTP Verification Phase (hidden initially) -->
-                            <div class="quiz-question hidden" id="otpVerifyPhase">
-                                <p style="color: #22c55e; font-weight: 600; margin-bottom: 0.75rem; text-align: center;">✅ Code sent! Check your phone</p>
-                                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 0.75rem; text-align: center;" id="phoneDisplay"></p>
-                                <input type="text" class="quiz-input" id="otpCode" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" pattern="\d{6}" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; font-weight: 700;">
-                                <button type="button" class="quiz-btn-next" id="verifyCodeBtn">Verify & Get My Quote →</button>
-                                <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
-                                    <button type="button" id="resendCodeBtn" style="background: none; border: none; color: #6c5ce7; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Resend Code</button>
-                                    <button type="button" id="changePhoneBtn" style="background: none; border: none; color: #64748b; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Change Number</button>
+                        </div>
+
+                        <!-- OTP Verification Step -->
+                        <div class="quiz-step hidden" id="step8">
+                            <div class="quiz-progress">
+                                <div class="progress-bar" style="width: 95%"></div>
+                            </div>
+                            <div style="text-align: center;">
+                                <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Verifying... <span id="phoneDisplayFormatted">(XXX)-XXX-XXXX</span></h2>
+                                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.25rem;">A 6-digit code has been sent to your phone.<br>This code will expire in 10 minutes.</p>
+                                <input type="text" class="quiz-input" id="otpCode" placeholder="Enter the code" maxlength="6" inputmode="numeric" pattern="\d{6}" style="text-align: center; font-size: 1.25rem; letter-spacing: 0.25rem; font-weight: 600;">
+                                <button type="button" class="quiz-btn-next" id="verifyCodeBtn">Verify →</button>
+                                <div style="margin-top: 1rem; text-align: left;">
+                                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.25rem;">Didn't get a code?</p>
+                                    <button type="button" id="resendCodeBtn" style="background: none; border: none; color: #6c5ce7; font-size: 0.9rem; cursor: pointer; padding: 0; display: block; margin-bottom: 0.25rem;">Resend</button>
+                                    <button type="button" id="changePhoneBtn" style="background: none; border: none; color: #6c5ce7; font-size: 0.9rem; cursor: pointer; padding: 0;">Verify with another phone number</button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Success Step -->
-                        <div class="quiz-step hidden" id="step8">
+                        <div class="quiz-step hidden" id="step9">
                             <div class="quiz-success">
                                 <div class="call-cta-box">
                                     <h1 style="color: #6c5ce7 !important; font-size: 2.5rem; font-weight: 900; margin: 0 0 1rem; text-align: center;">THANK YOU</h1>

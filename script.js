@@ -198,16 +198,23 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8'],
-        progress: [0, 5, 12, 25, 40, 55, 70, 85, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9'],
+        progress: [0, 5, 12, 25, 40, 55, 70, 85, 95, 100]
+    };
+
+    // Map step IDs to their index for easy lookup
+    const stepToIndex = {
+        'step3': 3,  // Name
+        'step4': 4,  // City
+        'step5': 5,  // Zip
+        'step6': 6,  // Email
+        'step7': 7   // Phone (handled by OTP flow)
     };
 
     function initQuiz() {
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
         const locationOptions = document.querySelectorAll('.location-option');
         const projectTypeOptions = document.querySelectorAll('.project-type-option');
-        // Get next buttons excluding the OTP-specific buttons
-        const nextButtons = document.querySelectorAll('.quiz-btn-next:not(#sendCodeBtn):not(#verifyCodeBtn)');
 
         quizOptions.forEach(option => {
             option.addEventListener('click', function(e) {
@@ -233,21 +240,39 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             });
         });
 
-        nextButtons.forEach((btn, index) => {
+        // Attach click handlers to Continue buttons by finding their parent step
+        document.querySelectorAll('.quiz-btn-next:not(#sendCodeBtn):not(#verifyCodeBtn)').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                handleNextStep(index + 3); // +3 because step0, step1, step2 are multiple choice
+                
+                // Find which step this button belongs to
+                const stepEl = this.closest('.quiz-step');
+                if (stepEl) {
+                    const stepId = stepEl.id;
+                    const stepIndex = stepToIndex[stepId];
+                    if (stepIndex !== undefined) {
+                        handleNextStep(stepIndex);
+                    }
+                }
             });
         });
 
-        // Get inputs excluding phone and OTP inputs (handled separately)
-        const inputs = document.querySelectorAll('.quiz-input:not(#userPhone):not(#otpCode)');
-        inputs.forEach((input, index) => {
+        // Attach Enter key handlers to inputs
+        document.querySelectorAll('.quiz-input:not(#userPhone):not(#otpCode)').forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    handleNextStep(index + 3); // +3 because step0, step1, step2 are multiple choice
+                    
+                    // Find which step this input belongs to
+                    const stepEl = input.closest('.quiz-step');
+                    if (stepEl) {
+                        const stepId = stepEl.id;
+                        const stepIndex = stepToIndex[stepId];
+                        if (stepIndex !== undefined) {
+                            handleNextStep(stepIndex);
+                        }
+                    }
                 }
             });
         });
@@ -267,11 +292,9 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         const changePhoneBtn = document.getElementById('changePhoneBtn');
         const phoneInput = document.getElementById('userPhone');
         const otpInput = document.getElementById('otpCode');
-        const phoneInputPhase = document.getElementById('phoneInputPhase');
-        const otpVerifyPhase = document.getElementById('otpVerifyPhase');
-        const phoneDisplay = document.getElementById('phoneDisplay');
+        const phoneDisplayFormatted = document.getElementById('phoneDisplayFormatted');
 
-        // Send Code button click
+        // Send Code button click (on step7 - phone entry)
         if (sendCodeBtn) {
             sendCodeBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
@@ -292,6 +315,9 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                     return;
                 }
 
+                // Store phone in userData
+                userData.phone = phone;
+
                 // Show loading state
                 sendCodeBtn.disabled = true;
                 sendCodeBtn.textContent = '📱 Sending code...';
@@ -299,20 +325,30 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                 try {
                     await sendOTP(phone);
                     
-                    // Switch to OTP verification phase
-                    phoneInputPhase.classList.add('hidden');
-                    otpVerifyPhase.classList.remove('hidden');
-                    phoneDisplay.textContent = 'Code sent to: ' + formatPhoneDisplay(phone);
+                    // Update the phone display on step8
+                    if (phoneDisplayFormatted) {
+                        phoneDisplayFormatted.textContent = formatPhoneDisplay(phone);
+                    }
+                    
+                    // Move to OTP verification step (step8)
+                    showStep(8);
                     
                     // Focus on OTP input
-                    setTimeout(() => otpInput.focus(), 100);
+                    setTimeout(() => {
+                        const otpInput = document.getElementById('otpCode');
+                        if (otpInput) otpInput.focus();
+                    }, 100);
                     
-                    console.log('✅ Switched to OTP verification phase');
+                    // Reset button for if they come back
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.textContent = 'Continue →';
+                    
+                    console.log('✅ Code sent, moved to verification step');
                 } catch (error) {
                     console.error('❌ Error sending OTP:', error);
                     alert(error.message || 'Failed to send verification code. Please try again.');
                     sendCodeBtn.disabled = false;
-                    sendCodeBtn.textContent = 'Send Verification Code →';
+                    sendCodeBtn.textContent = 'Continue →';
                 }
             });
         }
@@ -327,13 +363,13 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             });
         }
 
-        // Verify Code button click
+        // Verify Code button click (on step8 - OTP verification)
         if (verifyCodeBtn) {
             verifyCodeBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                const phone = phoneInput.value.trim();
+                const phone = userData.phone; // Get phone from userData
                 const code = otpInput.value.trim();
                 
                 if (code.length !== 6 || !/^\d{6}$/.test(code)) {
@@ -343,6 +379,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                     otpInput.placeholder = 'Enter 6-digit code';
                     setTimeout(() => {
                         otpInput.style.borderColor = '';
+                        otpInput.placeholder = 'Enter the code';
                     }, 2000);
                     return;
                 }
@@ -354,8 +391,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                 try {
                     await verifyOTP(phone, code);
                     
-                    // Phone verified! Store and proceed
-                    userData.phone = phone;
+                    // Phone verified!
                     userData.phone_verified = true;
                     
                     console.log('✅ Phone verified! Submitting lead...');
@@ -364,7 +400,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                     const sendSuccess = sendLeadToZapier(userData);
                     
                     if (sendSuccess) {
-                        showStep(8); // Go to thank you page
+                        showStep(9); // Go to thank you page (step9)
                     } else {
                         throw new Error('Failed to submit lead');
                     }
@@ -374,10 +410,10 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                     otpInput.style.borderColor = '#ef4444';
                     otpInput.placeholder = error.message || 'Invalid code';
                     verifyCodeBtn.disabled = false;
-                    verifyCodeBtn.textContent = 'Verify & Get My Quote →';
+                    verifyCodeBtn.textContent = 'Verify →';
                     setTimeout(() => {
                         otpInput.style.borderColor = '';
-                        otpInput.placeholder = 'Enter 6-digit code';
+                        otpInput.placeholder = 'Enter the code';
                     }, 2000);
                 }
             });
@@ -398,44 +434,41 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             resendCodeBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
                 
-                const phone = phoneInput.value.trim();
+                const phone = userData.phone;
                 
                 resendCodeBtn.disabled = true;
                 resendCodeBtn.textContent = 'Sending...';
 
                 try {
                     await sendOTP(phone);
-                    resendCodeBtn.textContent = '✅ Code sent!';
+                    resendCodeBtn.textContent = '✅ Sent!';
                     setTimeout(() => {
                         resendCodeBtn.disabled = false;
-                        resendCodeBtn.textContent = 'Resend Code';
+                        resendCodeBtn.textContent = 'Resend';
                     }, 3000);
                 } catch (error) {
                     alert(error.message || 'Failed to resend code. Please try again.');
                     resendCodeBtn.disabled = false;
-                    resendCodeBtn.textContent = 'Resend Code';
+                    resendCodeBtn.textContent = 'Resend';
                 }
             });
         }
 
-        // Change Phone button
+        // Change Phone button - go back to step7
         if (changePhoneBtn) {
             changePhoneBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Switch back to phone input phase
-                otpVerifyPhase.classList.add('hidden');
-                phoneInputPhase.classList.remove('hidden');
+                // Reset OTP input
+                if (otpInput) otpInput.value = '';
                 
-                // Reset states
-                phoneInput.value = '';
-                otpInput.value = '';
-                sendCodeBtn.disabled = false;
-                sendCodeBtn.textContent = 'Send Verification Code →';
-                verifyCodeBtn.disabled = false;
-                verifyCodeBtn.textContent = 'Verify & Get My Quote →';
+                // Go back to phone step
+                showStep(7);
                 
-                setTimeout(() => phoneInput.focus(), 100);
+                // Focus on phone input
+                setTimeout(() => {
+                    if (phoneInput) phoneInput.focus();
+                }, 100);
             });
         }
     }
@@ -740,14 +773,14 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Hide footer on success step
+        // Hide footer on success step and OTP step
         const footer = document.getElementById('quizFooter');
         if (footer) {
-            footer.style.display = stepIndex === 8 ? 'none' : 'block';
+            footer.style.display = (stepIndex === 8 || stepIndex === 9) ? 'none' : 'block';
         }
 
         // Log when thank-you page is shown
-        if (stepIndex === 8) {
+        if (stepIndex === 9) {
             console.log('📄 Thank you page now visible to user');
             
             // Update URL for conversion tracking
