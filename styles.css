@@ -1717,8 +1717,8 @@ body.quiz-modal-open {
   
   /* Make before/after image compact on mobile - small enough to show quiz */
   .ab-test-image {
-    max-width: 140px !important;
-    margin: 0.1rem auto 0 !important;
+    max-width: 100px !important;
+    margin: 0 auto !important;
   }
   
   .quiz-card {

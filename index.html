@@ -17,20 +17,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20231217">
+    <link rel="stylesheet" href="styles.css?v=20231217b">
     
     <!-- Mobile optimizations - hide arrow and make quiz visible above fold -->
     <style>
         @media (max-width: 768px) {
-            .big-arrow-container, .big-arrow, .hide-mobile, .desktop-only {
+            .big-arrow-container, .big-arrow, .hide-mobile, .desktop-only, .winchester-callout {
                 display: none !important;
                 height: 0 !important;
                 visibility: hidden !important;
                 position: absolute !important;
                 left: -9999px !important;
             }
-            .ab-test-image { max-width: 120px !important; margin: 0 auto !important; }
-            .winchester-callout { display: none !important; }
+            .ab-test-image { max-width: 100px !important; margin: 0 auto !important; }
             .hero { padding: 0 !important; margin-top: -2.5rem !important; }
             .hero-headline-main { font-size: 0.95rem !important; margin-bottom: 0 !important; }
         }
@@ -120,7 +119,6 @@
                 </div>
                 
                 <div class="hero-quiz">
-                    <p class="winchester-callout" style="color: #111827; font-weight: 800; font-size: 1.25rem; margin: 0 0 1rem; text-align: center; background: #ffffff; padding: 0.75rem 1.25rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">📍 For Winchester & Nearby Homeowners Only</p>
                     <div class="quiz-card" id="quizCard">
                         <div class="quiz-step" id="step0">
                             <div class="quiz-question">
