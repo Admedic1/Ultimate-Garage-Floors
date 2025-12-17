@@ -198,12 +198,13 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7'],
-        progress: [0, 10, 20, 35, 50, 65, 85, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8'],
+        progress: [0, 5, 12, 25, 40, 55, 70, 85, 100]
     };
 
     function initQuiz() {
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
+        const locationOptions = document.querySelectorAll('.location-option');
         const projectTypeOptions = document.querySelectorAll('.project-type-option');
         // Get next buttons excluding the OTP-specific buttons
         const nextButtons = document.querySelectorAll('.quiz-btn-next:not(#sendCodeBtn):not(#verifyCodeBtn)');
@@ -213,6 +214,14 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                 e.preventDefault();
                 e.stopPropagation();
                 handleInitialQuestion.call(this, e);
+            });
+        });
+
+        locationOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleLocationQuestion.call(this, e);
             });
         });
 
@@ -228,7 +237,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                handleNextStep(index + 2); // +2 because step0 and step1 are multiple choice
+                handleNextStep(index + 3); // +3 because step0, step1, step2 are multiple choice
             });
         });
 
@@ -238,7 +247,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    handleNextStep(index + 2); // +2 because step0 and step1 are multiple choice
+                    handleNextStep(index + 3); // +3 because step0, step1, step2 are multiple choice
                 }
             });
         });
@@ -355,7 +364,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
                     const sendSuccess = sendLeadToZapier(userData);
                     
                     if (sendSuccess) {
-                        showStep(7); // Go to thank you page
+                        showStep(8); // Go to thank you page
                     } else {
                         throw new Error('Failed to submit lead');
                     }
@@ -439,6 +448,58 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         return phone;
     }
 
+    function handleLocationQuestion(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        const location = this.getAttribute('data-location');
+        userData.within_service_area = location;
+
+        // Highlight selected option
+        document.querySelectorAll('.location-option').forEach(opt => {
+            opt.classList.remove('quiz-option-primary');
+        });
+        this.classList.add('quiz-option-primary');
+
+        console.log('📍 Location qualification:', location);
+
+        // If NO, send to exit page
+        if (location === 'no') {
+            setTimeout(() => {
+                showExitPage();
+            }, 300);
+            return;
+        }
+
+        // If YES, continue to project type step
+        setTimeout(() => {
+            showStep(2);
+        }, 300);
+    }
+
+    function showExitPage() {
+        // Hide all steps
+        document.querySelectorAll('.quiz-step').forEach(step => {
+            step.classList.add('hidden');
+        });
+
+        // Show exit page
+        const exitStep = document.getElementById('stepExit');
+        if (exitStep) {
+            exitStep.classList.remove('hidden');
+        }
+
+        // Hide footer
+        const footer = document.getElementById('quizFooter');
+        if (footer) {
+            footer.style.display = 'none';
+        }
+
+        console.log('❌ User disqualified - outside service area');
+    }
+
     function handleProjectTypeQuestion(e) {
         if (e) {
             e.preventDefault();
@@ -456,9 +517,9 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
         console.log('📍 Project type selected:', projectType);
 
-        // Move to next step after short delay
+        // Move to next step (name) after short delay
         setTimeout(() => {
-            showStep(2);
+            showStep(3);
         }, 300);
     }
 
@@ -513,7 +574,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
     function handleNextStep(stepIndex) {
         // Prevent double-clicks during submission
-        if (isSubmitting && stepIndex === 6) {
+        if (isSubmitting && stepIndex === 7) {
             console.log("⚠️ Submission already in progress...");
             return;
         }
@@ -527,24 +588,24 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         if (!value || value.length === 0) {
             input.focus();
             input.style.borderColor = '#ef4444';
-            input.placeholder = stepIndex === 2 ? 'Please enter your name' : 
-                               stepIndex === 3 ? 'Please enter your city' :
-                               stepIndex === 4 ? 'Please enter your zip code' :
-                               stepIndex === 5 ? 'Please enter a valid email' :
+            input.placeholder = stepIndex === 3 ? 'Please enter your name' : 
+                               stepIndex === 4 ? 'Please enter your city' :
+                               stepIndex === 5 ? 'Please enter your zip code' :
+                               stepIndex === 6 ? 'Please enter a valid email' :
                                'Please enter your phone number';
             setTimeout(() => {
                 input.style.borderColor = '';
-                input.placeholder = stepIndex === 2 ? 'Enter your name' : 
-                                   stepIndex === 3 ? 'Enter your city' :
-                                   stepIndex === 4 ? 'Enter zip code' :
-                                   stepIndex === 5 ? 'your@email.com' :
+                input.placeholder = stepIndex === 3 ? 'Enter your name' : 
+                                   stepIndex === 4 ? 'Enter your city' :
+                                   stepIndex === 5 ? 'Enter zip code' :
+                                   stepIndex === 6 ? 'your@email.com' :
                                    '(540) 123-4567';
             }, 2000);
             return;
         }
 
-        // Name validation for step 2 (at least 2 characters, letters and spaces only)
-        if (stepIndex === 2) {
+        // Name validation for step 3 (at least 2 characters, letters and spaces only)
+        if (stepIndex === 3) {
             const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
             if (!nameRegex.test(value)) {
                 input.focus();
@@ -559,8 +620,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // City validation for step 3 (at least 2 characters, letters and spaces only)
-        if (stepIndex === 3) {
+        // City validation for step 4 (at least 2 characters, letters and spaces only)
+        if (stepIndex === 4) {
             const cityRegex = /^[a-zA-Z\s'-]{2,50}$/;
             if (!cityRegex.test(value)) {
                 input.focus();
@@ -575,8 +636,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Zip code validation for step 4 (exactly 5 digits)
-        if (stepIndex === 4) {
+        // Zip code validation for step 5 (exactly 5 digits)
+        if (stepIndex === 5) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
@@ -591,8 +652,8 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Email validation for step 5
-        if (stepIndex === 5) {
+        // Email validation for step 6
+        if (stepIndex === 6) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(value)) {
                 input.focus();
@@ -607,49 +668,49 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Note: Phone validation (step 6) is now handled by OTP verification handlers
+        // Note: Phone validation (step 7) is now handled by OTP verification handlers
 
-        if (stepIndex === 2) {
+        if (stepIndex === 3) {
             userData.name = value;
             updatePersonalizedMessages(value);
-        } else if (stepIndex === 3) {
-            userData.city = value;
         } else if (stepIndex === 4) {
-            userData.zip = value;
+            userData.city = value;
         } else if (stepIndex === 5) {
+            userData.zip = value;
+        } else if (stepIndex === 6) {
             userData.email = value;
         }
-        // Note: Step 6 (phone) is now handled by OTP verification handlers, not here
+        // Note: Step 7 (phone) is now handled by OTP verification handlers, not here
 
-        // After step 5 (email), go to step 6 (phone with OTP verification)
+        // After step 6 (email), go to step 7 (phone with OTP verification)
         // The OTP handlers will take over from there
-        if (stepIndex < 6) {
+        if (stepIndex < 7) {
             showStep(stepIndex + 1);
         }
-        // Don't auto-advance from step 6 - OTP verification handles that
+        // Don't auto-advance from step 7 - OTP verification handles that
     }
 
     function getInputForStep(stepIndex) {
         const inputs = {
-            2: document.getElementById('userName'),
-            3: document.getElementById('userCity'),
-            4: document.getElementById('userZip'),
-            5: document.getElementById('userEmail'),
-            6: document.getElementById('userPhone')
+            3: document.getElementById('userName'),
+            4: document.getElementById('userCity'),
+            5: document.getElementById('userZip'),
+            6: document.getElementById('userEmail'),
+            7: document.getElementById('userPhone')
         };
         return inputs[stepIndex];
     }
 
     function updatePersonalizedMessages(name) {
-        const step3Title = document.getElementById('step3Title');
         const step4Title = document.getElementById('step4Title');
         const step5Title = document.getElementById('step5Title');
         const step6Title = document.getElementById('step6Title');
+        const step7Title = document.getElementById('step7Title');
 
-        if (step3Title) step3Title.textContent = `Hi ${name}! What city are you in?`;
-        if (step4Title) step4Title.textContent = `${name}, what's your zip code?`;
-        if (step5Title) step5Title.textContent = `${name}, what's your email?`;
-        if (step6Title) step6Title.textContent = `Last step ${name}! What's your phone number?`;
+        if (step4Title) step4Title.textContent = `Hi ${name}! What city are you in?`;
+        if (step5Title) step5Title.textContent = `${name}, what's your zip code?`;
+        if (step6Title) step6Title.textContent = `${name}, what's your email?`;
+        if (step7Title) step7Title.textContent = `Last step ${name}! What's your phone number?`;
     }
 
     function showStep(stepIndex) {
@@ -682,11 +743,11 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         // Hide footer on success step
         const footer = document.getElementById('quizFooter');
         if (footer) {
-            footer.style.display = stepIndex === 7 ? 'none' : 'block';
+            footer.style.display = stepIndex === 8 ? 'none' : 'block';
         }
 
         // Log when thank-you page is shown
-        if (stepIndex === 7) {
+        if (stepIndex === 8) {
             console.log('📄 Thank you page now visible to user');
             
             // Update URL for conversion tracking
