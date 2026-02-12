@@ -76,31 +76,52 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
 // -------------------------------------------------
 
 (function initABTest() {
-    // Check if user already has an assigned variant
-    let variant = localStorage.getItem('ab_test_variant');
+    // Check URL parameter for forced variant (for testing)
+    const urlParams = new URLSearchParams(window.location.search);
+    const forcedVariant = urlParams.get('variant');
     
-    // If no variant assigned, randomly assign one
-    if (!variant) {
-        variant = Math.random() < 0.5 ? 'A' : 'B';
+    let variant;
+    
+    if (forcedVariant === 'A' || forcedVariant === 'B') {
+        variant = forcedVariant;
         localStorage.setItem('ab_test_variant', variant);
-        console.log('🧪 A/B Test: New visitor assigned to Variant', variant);
+        console.log('🧪 A/B Test: Forced to Variant', variant, '(via URL)');
     } else {
-        console.log('🧪 A/B Test: Returning visitor - Variant', variant);
+        // Check if user already has an assigned variant
+        variant = localStorage.getItem('ab_test_variant');
+        
+        // If no variant assigned, randomly assign one
+        if (!variant) {
+            variant = Math.random() < 0.5 ? 'A' : 'B';
+            localStorage.setItem('ab_test_variant', variant);
+            console.log('🧪 A/B Test: New visitor assigned to Variant', variant);
+        } else {
+            console.log('🧪 A/B Test: Returning visitor - Variant', variant);
+        }
     }
     
     // Store variant globally for tracking
     window.abTestVariant = variant;
     
-    // If Variant B, show the before/after image
-    if (variant === 'B') {
-        document.addEventListener('DOMContentLoaded', function() {
-            const abTestImage = document.getElementById('abTestImage');
-            if (abTestImage) {
-                abTestImage.style.display = 'block';
-                console.log('🧪 A/B Test: Showing before/after image (Variant B)');
-            }
-        });
+    // Show the correct variant immediately (before DOMContentLoaded if possible)
+    function showVariant() {
+        const variantA = document.getElementById('variantA');
+        const variantB = document.getElementById('variantB');
+        
+        if (variant === 'A') {
+            if (variantA) variantA.style.display = 'block';
+            if (variantB) variantB.style.display = 'none';
+            console.log('🧪 A/B Test: Showing Variant A (bullets)');
+        } else {
+            if (variantA) variantA.style.display = 'none';
+            if (variantB) variantB.style.display = 'block';
+            console.log('🧪 A/B Test: Showing Variant B (before/after image)');
+        }
     }
+    
+    // Try immediately, then also on DOMContentLoaded
+    showVariant();
+    document.addEventListener('DOMContentLoaded', showVariant);
     
 })();
 
@@ -115,8 +136,8 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step0b', 'step1', 'step2', 'step3', 'step4', 'step5'],
-        progress: [0, 10, 25, 45, 65, 85, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5'],
+        progress: [0, 25, 45, 65, 85, 100]
     };
 
     function initQuiz() {
@@ -158,40 +179,14 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
 
         const answer = this.getAttribute('data-answer');
 
-        // Handle location question (step0)
-        if (answer === 'location-yes') {
-            userData.inServiceArea = true;
-            
-            document.querySelectorAll('#step0 .quiz-option').forEach(opt => {
-                opt.classList.remove('quiz-option-primary');
-            });
-            this.classList.add('quiz-option-primary');
-            
-            // Show homeowner question (step0b)
-            setTimeout(() => {
-                showStepById('step0b');
-            }, 300);
-            return;
-        }
-
-        if (answer === 'location-no') {
-            userData.inServiceArea = false;
-            
-            // Disqualify - show disqualified step
-            setTimeout(() => {
-                showStepById('stepDisqualified');
-            }, 300);
-            return;
-        }
-
-        // Handle homeowner question (step0b)
+        // Handle homeowner question (step0)
         if (answer === 'no') {
             alert('We primarily work with homeowners. Please have the homeowner fill out the form.');
             return;
         }
 
         if (answer === 'yes') {
-            document.querySelectorAll('#step0b .quiz-option').forEach(opt => {
+            document.querySelectorAll('#step0 .quiz-option').forEach(opt => {
                 opt.classList.remove('quiz-option-primary');
             });
             this.classList.add('quiz-option-primary');
@@ -201,7 +196,7 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             // Make quiz sticky/modal when user engages
             setTimeout(() => {
                 makeQuizSticky();
-                showStep(2); // Go to name step (index 2 in new array)
+                showStep(1); // Go to name step (index 1 in array)
             }, 300);
         }
     }
@@ -379,15 +374,15 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         }
 
         // Map input step indices to quizData.steps indices
-        // Input 1 (name/step1) → goes to step2 (index 3)
-        // Input 2 (zip/step2) → goes to step3 (index 4)
-        // Input 3 (email/step3) → goes to step4 (index 5)
-        // Input 4 (phone/step4) → goes to step5 (index 6)
+        // Input 1 (name/step1) → goes to step2 (index 2)
+        // Input 2 (zip/step2) → goes to step3 (index 3)
+        // Input 3 (email/step3) → goes to step4 (index 4)
+        // Input 4 (phone/step4) → goes to step5 (index 5)
         const nextStepMap = {
-            1: 3,  // name → zip
-            2: 4,  // zip → email
-            3: 5,  // email → phone
-            4: 6   // phone → success
+            1: 2,  // name → zip
+            2: 3,  // zip → email
+            3: 4,  // email → phone
+            4: 5   // phone → success
         };
         
         showStep(nextStepMap[stepIndex]);

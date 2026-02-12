@@ -19,7 +19,8 @@
     <div class="top-banner">
         <div class="container">
             <div class="top-banner-content">
-                <span class="banner-text">See what smart homeowners are upgrading to ↓</span>
+                <span class="badge-new">NEW</span>
+                <span class="banner-text">This is what smart Denmark residents are doing.</span>
             </div>
         </div>
     </div>
@@ -28,20 +29,24 @@
     <div class="top-bar">
         <div class="container">
             <div class="top-bar-inner">
-                <a href="tel:9203673139" class="header-call-btn">
-                    <span class="header-call-icon">📞</span>
-                    <span class="header-call-text">Call Now</span>
-                    <span class="header-call-arrow">↓</span>
-                </a>
-                <div class="top-bar-right">
-                    <div class="google-reviews-badge">
-                        <img src="images/google-reviews-icon.png" alt="Google Reviews" class="google-reviews-icon">
-                        <div class="google-reviews-info">
-                            <div class="google-stars">★★★★★</div>
-                            <span class="google-reviews-count"><span class="green-number">5.0</span> from <span class="green-number">97+</span> reviews</span>
-                        </div>
+                <!-- Social Proof Row - Side by Side -->
+                <div class="social-proof-row">
+                    <div class="review-badge trustpilot-badge-new">
+                        <span class="trustpilot-logo">★ Trustpilot</span>
+                        <span class="review-stars trustpilot-stars">★★★★★</span>
+                        <span class="review-label">Excellent</span>
+                    </div>
+                    <div class="review-badge google-badge-new">
+                        <span class="google-text">Google</span>
+                        <span class="review-stars">★★★★★</span>
+                        <span class="google-review-count">97 Reviews</span>
                     </div>
                 </div>
+                <!-- Call Button -->
+                <a href="tel:9203673139" class="header-call-btn">
+                    <span class="header-call-icon">📞</span>
+                    <span class="header-call-text">CLICK TO CALL</span>
+                </a>
             </div>
         </div>
     </div>
@@ -50,55 +55,45 @@
     <section class="hero section">
         <div class="container">
             <div class="hero-simple">
-                <h1 class="hero-headline-main">Upgrade Your Cracked, Stained Concrete Floors <span class="text-gradient">in 1 Day</span></h1>
-                
-                <!-- Before/After Image -->
-                <div class="ab-test-image" id="abTestImage">
-                    <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
+                <!-- Variant A: Bullets -->
+                <div id="variantA" class="ab-variant">
+                    <h1 class="hero-headline-main">Denmark — Set Up Your <span class="text-gradient">Dream Garage Floor</span> Today</h1>
+                    
+                    <ul class="hero-benefits">
+                        <li><span class="benefit-check">✓</span> No more cracks</li>
+                        <li><span class="benefit-check">✓</span> No more stains</li>
+                        <li><span class="benefit-check">✓</span> Easy cleaning</li>
+                    </ul>
                 </div>
                 
-                <div class="big-arrow-container">
-                    <svg class="big-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L12 28M12 28L6 22M12 28L18 22" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <!-- Variant B: Before/After Image -->
+                <div id="variantB" class="ab-variant" style="display: none;">
+                    <h1 class="hero-headline-main">Fix Your Cracked, Stained Concrete <span class="text-gradient">in One Day</span></h1>
+                    
+                    <div class="ab-test-image">
+                        <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
+                    </div>
                 </div>
                 
                 <div class="hero-quiz">
-                    <div class="quiz-card" id="quizCard">
+                    <div class="quiz-card quiz-card-purple" id="quizCard">
+                        <!-- Homeowner Step (First Question) -->
                         <div class="quiz-step" id="step0">
+                            <span class="step-label">STEP 1</span>
                             <div class="quiz-question">
-                                <p class="quiz-question-text">Are you in Denmark, Wisconsin or nearby?</p>
+                                <p class="quiz-question-text">Do you own your home?</p>
                                 <div class="quiz-options">
-                                    <button type="button" class="quiz-option quiz-option-primary" data-answer="location-yes">Yes</button>
-                                    <button type="button" class="quiz-option" data-answer="location-no">No</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="yes">Yes</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="no">No</button>
                                 </div>
                             </div>
                             
                             <p class="hero-urgency">⚡ Only 2 spots left this month</p>
                             <p class="quiz-time">✓ Takes 30 seconds  ✓ Hassle-free</p>
-                        </div>
-
-                        <!-- Disqualified Step -->
-                        <div class="quiz-step hidden" id="stepDisqualified">
-                            <div class="quiz-disqualified">
-                                <div class="disqualified-icon">😔</div>
-                                <h2>Sorry, we only serve the Denmark, WI area</h2>
-                                <p>We currently only provide epoxy flooring services in Denmark, Wisconsin and surrounding communities.</p>
-                                <p class="disqualified-note">If you're planning to move to the area, feel free to reach out!</p>
-                            </div>
-                        </div>
-
-                        <!-- Homeowner Step -->
-                        <div class="quiz-step hidden" id="step0b">
-                            <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 10%"></div>
-                            </div>
-                            <div class="quiz-question">
-                                <p class="quiz-question-text">Do you own your home?</p>
-                                <div class="quiz-options">
-                                    <button type="button" class="quiz-option quiz-option-primary" data-answer="yes">Yes</button>
-                                    <button type="button" class="quiz-option" data-answer="no">No</button>
-                                </div>
+                            
+                            <div class="quiz-footer-text">
+                                <p class="consultation-text"><strong>Free consultation</strong> — No obligation</p>
+                                <p class="match-text">We'll match you with the best solution for your property</p>
                             </div>
                         </div>
 
@@ -607,7 +602,6 @@
         <div class="exit-popup-content">
             <h3>⚠️ Wait! Get 10% Off — Call Now!</h3>
             <p>Don't leave without claiming your <strong>exclusive 10% discount</strong>. Call us right now and mention this offer!</p>
-            <div class="exit-call-number">(920) 367-3139</div>
             <a href="tel:9203673139" class="exit-call-btn" onclick="document.getElementById('exitPopup').style.display='none';">
                 <span class="exit-call-icon">📞</span>
                 <span>TAP TO CALL NOW</span>
@@ -685,6 +679,6 @@
         setInterval(showSocialProof, 10000);
       });
     </script>
-    <script src="script.js?v=1"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>
