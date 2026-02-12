@@ -1,89 +1,22 @@
-// =========================================
-//     PHONE VERIFICATION (OTP) FUNCTIONS
-// =========================================
-
-let verifiedPhone = null; // Store the verified phone number
-
-async function sendOTP(phone) {
-  const digitsOnly = phone.replace(/\D/g, '');
-  if (digitsOnly.length < 10) {
-    throw new Error('Please enter a valid 10-digit phone number');
-  }
-
-  console.log('📱 Sending OTP to:', phone);
-  
-  const response = await fetch('/api/send-otp', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ phone: digitsOnly })
-  });
-
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.error || 'Failed to send verification code');
-  }
-
-  console.log('✅ OTP sent successfully');
-  return data;
-}
-
-async function verifyOTP(phone, code) {
-  const digitsOnly = phone.replace(/\D/g, '');
-  
-  console.log('🔐 Verifying OTP for:', phone);
-  
-  const response = await fetch('/api/verify-otp', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ phone: digitsOnly, code: code })
-  });
-
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.error || 'Verification failed');
-  }
-
-  if (data.status === 'approved') {
-    verifiedPhone = digitsOnly;
-    console.log('✅ Phone verified successfully');
-    return true;
-  }
-
-  throw new Error('Invalid code. Please try again.');
-}
-
-// =========================================
-//     LEAD SUBMISSION FUNCTION
-// =========================================
-
 function sendLeadToZapier(userData) {
   // VALIDATION: Ensure all fields are filled before sending
-  if (!userData.name || !userData.city || !userData.zip || !userData.email || !userData.phone || !userData.project_type) {
+  if (!userData.name || !userData.zip || !userData.email || !userData.phone) {
     console.error("❌ BLOCKED: Cannot send incomplete lead data", userData);
     alert("Please fill out all fields before submitting.");
     return false;
   }
   
   // Additional validation: Check for empty/whitespace-only values
-  if (!userData.name.trim() || !userData.city.trim() || !userData.zip.trim() || !userData.email.trim() || !userData.phone.trim()) {
+  if (!userData.name.trim() || !userData.zip.trim() || !userData.email.trim() || !userData.phone.trim()) {
     console.error("❌ BLOCKED: Cannot send blank lead data", userData);
     return false;
   }
   
   const payload = {
     name: userData.name.trim(),
-    project_type: userData.project_type,
-    city: userData.city.trim(),
     zip: userData.zip.trim(),
     email: userData.email.trim(),
     phone: userData.phone.trim(),
-    phone_verified: userData.phone_verified ? 'yes' : 'no',
     ab_variant: window.abTestVariant || 'unknown'
   };
   
@@ -93,8 +26,8 @@ function sendLeadToZapier(userData) {
   let zapierSuccess = false;
   let sheetsSuccess = false;
   
-  // Send to Zapier (primary)
-  fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
+  // Send to Zapier (primary) - UPDATE WITH YOUR OWN WEBHOOK URL
+  fetch("https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_HERE", {
     method: "POST",
     body: JSON.stringify(payload)
   })
@@ -110,27 +43,21 @@ function sendLeadToZapier(userData) {
     console.error("❌ Error sending lead to Zapier:", error);
   });
   
-  // Send to Google Sheets (backup) - using form data for reliability
-  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwyIWqYDAlBkTxn9gY7jWUHeZT4RAWH8g4BxJS2cLF5M5lt62C0SP7Co11miz6RvZ8/exec";
+  // Send to Google Sheets (backup) - UPDATE WITH YOUR OWN URL
+  const GOOGLE_SHEET_URL = "PASTE_YOUR_GOOGLE_SHEETS_URL_HERE";
   
   if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
-    const formData = new FormData();
-    formData.append('name', payload.name);
-    formData.append('project_type', payload.project_type);
-    formData.append('city', payload.city);
-    formData.append('zip', payload.zip);
-    formData.append('email', payload.email);
-    formData.append('phone', payload.phone);
-    formData.append('phone_verified', payload.phone_verified);
-    formData.append('ab_variant', payload.ab_variant);
-    
     fetch(GOOGLE_SHEET_URL, {
       method: "POST",
-      body: formData
+      body: JSON.stringify(payload)
     })
-    .then(response => response.text())
+    .then(response => {
+      sheetsSuccess = response.ok;
+      console.log(sheetsSuccess ? "✅ Google Sheets backup status:" : "⚠️ Google Sheets backup status:", response.status);
+      return response.json();
+    })
     .then(data => {
-      console.log("✅ Google Sheets backup response:", data);
+      console.log("Google Sheets backup response:", data);
     })
     .catch(error => {
       console.error("❌ Error sending to Google Sheets backup:", error);
@@ -142,7 +69,7 @@ function sendLeadToZapier(userData) {
   return true;
 }
 
-console.log("Ultimate Garage Floors - script loaded v1.0");
+console.log("Custom Epoxy Solutions - script loaded v1.0");
 
 // -------------------------------------------------
 //          A/B TEST LOGIC
@@ -166,32 +93,15 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     
     // If Variant B, show the before/after image
     if (variant === 'B') {
-        function showImage() {
+        document.addEventListener('DOMContentLoaded', function() {
             const abTestImage = document.getElementById('abTestImage');
             if (abTestImage) {
                 abTestImage.style.display = 'block';
                 console.log('🧪 A/B Test: Showing before/after image (Variant B)');
             }
-        }
-        
-        // Try immediately, then on DOMContentLoaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', showImage);
-        } else {
-            showImage();
-        }
+        });
     }
     
-    // Send variant to Google Analytics
-    if (typeof gtag === 'function') {
-        gtag('event', 'ab_test_variant', {
-            'event_category': 'A/B Test',
-            'event_label': 'Homepage Image Test',
-            'value': variant === 'A' ? 0 : 1,
-            'variant': variant
-        });
-        console.log('🧪 A/B Test: Sent variant to Google Analytics');
-    }
 })();
 
 // -------------------------------------------------
@@ -205,23 +115,13 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9'],
-        progress: [0, 5, 12, 25, 40, 55, 70, 85, 95, 100]
-    };
-
-    // Map step IDs to their index for easy lookup
-    const stepToIndex = {
-        'step3': 3,  // Name
-        'step4': 4,  // City
-        'step5': 5,  // Zip
-        'step6': 6,  // Email
-        'step7': 7   // Phone (handled by OTP flow)
+        steps: ['step0', 'step0b', 'step1', 'step2', 'step3', 'step4', 'step5'],
+        progress: [0, 10, 25, 45, 65, 85, 100]
     };
 
     function initQuiz() {
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
-        const locationOptions = document.querySelectorAll('.location-option');
-        const projectTypeOptions = document.querySelectorAll('.project-type-option');
+        const nextButtons = document.querySelectorAll('.quiz-btn-next');
 
         quizOptions.forEach(option => {
             option.addEventListener('click', function(e) {
@@ -231,336 +131,23 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             });
         });
 
-        locationOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                handleLocationQuestion.call(this, e);
-            });
-        });
-
-        projectTypeOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                handleProjectTypeQuestion.call(this, e);
-            });
-        });
-
-        // Attach click handlers to Continue buttons by finding their parent step
-        document.querySelectorAll('.quiz-btn-next:not(#sendCodeBtn):not(#verifyCodeBtn)').forEach(btn => {
+        nextButtons.forEach((btn, index) => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                // Find which step this button belongs to
-                const stepEl = this.closest('.quiz-step');
-                if (stepEl) {
-                    const stepId = stepEl.id;
-                    const stepIndex = stepToIndex[stepId];
-                    if (stepIndex !== undefined) {
-                        handleNextStep(stepIndex);
-                    }
-                }
+                handleNextStep(index + 1);
             });
         });
 
-        // Attach Enter key handlers to inputs
-        document.querySelectorAll('.quiz-input:not(#userPhone):not(#otpCode)').forEach(input => {
+        const inputs = document.querySelectorAll('.quiz-input');
+        inputs.forEach((input, index) => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    
-                    // Find which step this input belongs to
-                    const stepEl = input.closest('.quiz-step');
-                    if (stepEl) {
-                        const stepId = stepEl.id;
-                        const stepIndex = stepToIndex[stepId];
-                        if (stepIndex !== undefined) {
-                            handleNextStep(stepIndex);
-                        }
-                    }
+                    handleNextStep(index + 1);
                 }
             });
         });
-
-        // Initialize OTP verification handlers
-        initOTPHandlers();
-    }
-
-    // =========================================
-    //     OTP VERIFICATION UI HANDLERS
-    // =========================================
-
-    function initOTPHandlers() {
-        const sendCodeBtn = document.getElementById('sendCodeBtn');
-        const verifyCodeBtn = document.getElementById('verifyCodeBtn');
-        const resendCodeBtn = document.getElementById('resendCodeBtn');
-        const changePhoneBtn = document.getElementById('changePhoneBtn');
-        const phoneInput = document.getElementById('userPhone');
-        const otpInput = document.getElementById('otpCode');
-        const phoneDisplayFormatted = document.getElementById('phoneDisplayFormatted');
-
-        // Send Code button click (on step7 - phone entry)
-        if (sendCodeBtn) {
-            sendCodeBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const phone = phoneInput.value.trim();
-                const digitsOnly = phone.replace(/\D/g, '');
-                
-                if (digitsOnly.length < 10) {
-                    phoneInput.focus();
-                    phoneInput.style.borderColor = '#ef4444';
-                    phoneInput.value = '';
-                    phoneInput.placeholder = 'Enter a valid 10-digit phone number';
-                    setTimeout(() => {
-                        phoneInput.style.borderColor = '';
-                        phoneInput.placeholder = '(540) 123-4567';
-                    }, 2000);
-                    return;
-                }
-
-                // Store phone in userData
-                userData.phone = phone;
-
-                // Show loading state
-                sendCodeBtn.disabled = true;
-                sendCodeBtn.textContent = '📱 Sending code...';
-
-                try {
-                    await sendOTP(phone);
-                    
-                    // Update the phone display on step8
-                    if (phoneDisplayFormatted) {
-                        phoneDisplayFormatted.textContent = formatPhoneDisplay(phone);
-                    }
-                    
-                    // Move to OTP verification step (step8)
-                    showStep(8);
-                    
-                    // Focus on OTP input
-                    setTimeout(() => {
-                        const otpInput = document.getElementById('otpCode');
-                        if (otpInput) otpInput.focus();
-                    }, 100);
-                    
-                    // Reset button for if they come back
-                    sendCodeBtn.disabled = false;
-                    sendCodeBtn.textContent = 'Continue →';
-                    
-                    console.log('✅ Code sent, moved to verification step');
-                } catch (error) {
-                    console.error('❌ Error sending OTP:', error);
-                    alert(error.message || 'Failed to send verification code. Please try again.');
-                    sendCodeBtn.disabled = false;
-                    sendCodeBtn.textContent = 'Continue →';
-                }
-            });
-        }
-
-        // Phone input Enter key
-        if (phoneInput) {
-            phoneInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    sendCodeBtn.click();
-                }
-            });
-        }
-
-        // Verify Code button click (on step8 - OTP verification)
-        if (verifyCodeBtn) {
-            verifyCodeBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const phone = userData.phone; // Get phone from userData
-                const code = otpInput.value.trim();
-                
-                if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-                    otpInput.focus();
-                    otpInput.style.borderColor = '#ef4444';
-                    otpInput.value = '';
-                    otpInput.placeholder = 'Enter 6-digit code';
-                    setTimeout(() => {
-                        otpInput.style.borderColor = '';
-                        otpInput.placeholder = 'Enter the code';
-                    }, 2000);
-                    return;
-                }
-
-                // Show loading state
-                verifyCodeBtn.disabled = true;
-                verifyCodeBtn.textContent = '🔐 Verifying...';
-
-                try {
-                    await verifyOTP(phone, code);
-                    
-                    // Phone verified!
-                    userData.phone_verified = true;
-                    
-                    console.log('✅ Phone verified! Submitting lead...');
-                    
-                    // Submit the lead
-                    const sendSuccess = sendLeadToZapier(userData);
-                    
-                    if (sendSuccess) {
-                        showStep(9); // Go to thank you page (step9)
-                    } else {
-                        throw new Error('Failed to submit lead');
-                    }
-                } catch (error) {
-                    console.error('❌ Verification error:', error);
-                    otpInput.value = '';
-                    otpInput.style.borderColor = '#ef4444';
-                    otpInput.placeholder = error.message || 'Invalid code';
-                    verifyCodeBtn.disabled = false;
-                    verifyCodeBtn.textContent = 'Verify →';
-                    setTimeout(() => {
-                        otpInput.style.borderColor = '';
-                        otpInput.placeholder = 'Enter the code';
-                    }, 2000);
-                }
-            });
-        }
-
-        // OTP input Enter key
-        if (otpInput) {
-            otpInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    verifyCodeBtn.click();
-                }
-            });
-        }
-
-        // Resend Code button
-        if (resendCodeBtn) {
-            resendCodeBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                
-                const phone = userData.phone;
-                
-                resendCodeBtn.disabled = true;
-                resendCodeBtn.textContent = 'Sending...';
-
-                try {
-                    await sendOTP(phone);
-                    resendCodeBtn.textContent = '✅ Sent!';
-                    setTimeout(() => {
-                        resendCodeBtn.disabled = false;
-                        resendCodeBtn.textContent = 'Resend';
-                    }, 3000);
-                } catch (error) {
-                    alert(error.message || 'Failed to resend code. Please try again.');
-                    resendCodeBtn.disabled = false;
-                    resendCodeBtn.textContent = 'Resend';
-                }
-            });
-        }
-
-        // Change Phone button - go back to step7
-        if (changePhoneBtn) {
-            changePhoneBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Reset OTP input
-                if (otpInput) otpInput.value = '';
-                
-                // Go back to phone step
-                showStep(7);
-                
-                // Focus on phone input
-                setTimeout(() => {
-                    if (phoneInput) phoneInput.focus();
-                }, 100);
-            });
-        }
-    }
-
-    function formatPhoneDisplay(phone) {
-        const digits = phone.replace(/\D/g, '');
-        if (digits.length === 10) {
-            return '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + '-' + digits.slice(6);
-        }
-        return phone;
-    }
-
-    function handleLocationQuestion(e) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        const location = this.getAttribute('data-location');
-        userData.within_service_area = location;
-
-        // Highlight selected option
-        document.querySelectorAll('.location-option').forEach(opt => {
-            opt.classList.remove('quiz-option-primary');
-        });
-        this.classList.add('quiz-option-primary');
-
-        console.log('📍 Location qualification:', location);
-
-        // If NO, send to exit page
-        if (location === 'no') {
-            setTimeout(() => {
-                showExitPage();
-            }, 300);
-            return;
-        }
-
-        // If YES, continue to project type step
-        setTimeout(() => {
-            showStep(2);
-        }, 300);
-    }
-
-    function showExitPage() {
-        // Hide all steps
-        document.querySelectorAll('.quiz-step').forEach(step => {
-            step.classList.add('hidden');
-        });
-
-        // Show exit page
-        const exitStep = document.getElementById('stepExit');
-        if (exitStep) {
-            exitStep.classList.remove('hidden');
-        }
-
-        // Hide footer
-        const footer = document.getElementById('quizFooter');
-        if (footer) {
-            footer.style.display = 'none';
-        }
-
-        console.log('❌ User disqualified - outside service area');
-    }
-
-    function handleProjectTypeQuestion(e) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        const projectType = this.getAttribute('data-project');
-        userData.project_type = projectType;
-
-        // Highlight selected option
-        document.querySelectorAll('.project-type-option').forEach(opt => {
-            opt.classList.remove('quiz-option-selected');
-        });
-        this.classList.add('quiz-option-selected');
-
-        console.log('📍 Project type selected:', projectType);
-
-        // Move to next step (name) after short delay
-        setTimeout(() => {
-            showStep(3);
-        }, 300);
     }
 
     function handleInitialQuestion(e) {
@@ -571,24 +158,69 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
         const answer = this.getAttribute('data-answer');
 
-        if (answer === 'no') {
-            alert('We primarily work with homeowners.');
+        // Handle location question (step0)
+        if (answer === 'location-yes') {
+            userData.inServiceArea = true;
+            
+            document.querySelectorAll('#step0 .quiz-option').forEach(opt => {
+                opt.classList.remove('quiz-option-primary');
+            });
+            this.classList.add('quiz-option-primary');
+            
+            // Show homeowner question (step0b)
+            setTimeout(() => {
+                showStepById('step0b');
+            }, 300);
             return;
         }
 
-        document.querySelectorAll('.quiz-option').forEach(opt => {
-            opt.classList.remove('quiz-option-primary');
+        if (answer === 'location-no') {
+            userData.inServiceArea = false;
+            
+            // Disqualify - show disqualified step
+            setTimeout(() => {
+                showStepById('stepDisqualified');
+            }, 300);
+            return;
+        }
+
+        // Handle homeowner question (step0b)
+        if (answer === 'no') {
+            alert('We primarily work with homeowners. Please have the homeowner fill out the form.');
+            return;
+        }
+
+        if (answer === 'yes') {
+            document.querySelectorAll('#step0b .quiz-option').forEach(opt => {
+                opt.classList.remove('quiz-option-primary');
+            });
+            this.classList.add('quiz-option-primary');
+
+            userData.homeowner = answer;
+            
+            // Make quiz sticky/modal when user engages
+            setTimeout(() => {
+                makeQuizSticky();
+                showStep(2); // Go to name step (index 2 in new array)
+            }, 300);
+        }
+    }
+
+    function showStepById(stepId) {
+        document.querySelectorAll('.quiz-step').forEach(step => {
+            step.classList.add('hidden');
         });
-
-        this.classList.add('quiz-option-primary');
-
-        userData.homeowner = answer;
         
-        // Make quiz sticky/modal when user engages
-        setTimeout(() => {
-            makeQuizSticky();
-            showStep(1); // Go to project type question
-        }, 300);
+        const targetStep = document.getElementById(stepId);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+        }
+        
+        // Hide footer on disqualified step
+        const quizFooter = document.getElementById('quizFooter');
+        if (quizFooter) {
+            quizFooter.style.display = stepId === 'stepDisqualified' ? 'none' : '';
+        }
     }
 
     function makeQuizSticky() {
@@ -614,7 +246,7 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
 
     function handleNextStep(stepIndex) {
         // Prevent double-clicks during submission
-        if (isSubmitting && stepIndex === 7) {
+        if (isSubmitting && stepIndex === 4) {
             console.log("⚠️ Submission already in progress...");
             return;
         }
@@ -628,62 +260,39 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
         if (!value || value.length === 0) {
             input.focus();
             input.style.borderColor = '#ef4444';
-            input.placeholder = stepIndex === 3 ? 'Please enter your name' : 
-                               stepIndex === 4 ? 'Please enter your city' :
-                               stepIndex === 5 ? 'Please enter your zip code' :
-                               stepIndex === 6 ? 'Please enter a valid email' :
+            input.placeholder = stepIndex === 1 ? 'Please enter your name' : 
+                               stepIndex === 2 ? 'Please enter your zip code' :
+                               stepIndex === 3 ? 'Please enter a valid email' :
                                'Please enter your phone number';
             setTimeout(() => {
                 input.style.borderColor = '';
-                input.placeholder = stepIndex === 3 ? 'Enter your name' : 
-                                   stepIndex === 4 ? 'Enter your city' :
-                                   stepIndex === 5 ? 'Enter zip code' :
-                                   stepIndex === 6 ? 'your@email.com' :
-                                   '(540) 123-4567';
+                input.placeholder = stepIndex === 1 ? 'Enter your name' : 
+                                   stepIndex === 2 ? 'Enter zip code' :
+                                   stepIndex === 3 ? 'your@email.com' :
+                                   '(607) 123-4567';
             }, 2000);
             return;
         }
 
-        // Name validation for step 3 (at least 2 characters, letters and spaces only)
-        if (stepIndex === 3) {
-            const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
-            if (!nameRegex.test(value)) {
-                input.focus();
-                input.style.borderColor = '#ef4444';
-                input.value = '';
-                input.placeholder = value.length < 2 ? 'Name must be at least 2 characters' : 'Please enter a valid name (letters only)';
-                setTimeout(() => {
-                    input.style.borderColor = '';
-                    input.placeholder = 'Enter your name';
-                }, 2000);
-                return;
-            }
+        // Name validation for step 1 (at least 2 characters)
+        if (stepIndex === 1 && value.length < 2) {
+            input.focus();
+            input.style.borderColor = '#ef4444';
+            input.placeholder = 'Name must be at least 2 characters';
+            setTimeout(() => {
+                input.style.borderColor = '';
+                input.placeholder = 'Enter your name';
+            }, 2000);
+            return;
         }
 
-        // City validation for step 4 (at least 2 characters, letters and spaces only)
-        if (stepIndex === 4) {
-            const cityRegex = /^[a-zA-Z\s'-]{2,50}$/;
-            if (!cityRegex.test(value)) {
-                input.focus();
-                input.style.borderColor = '#ef4444';
-                input.value = '';
-                input.placeholder = value.length < 2 ? 'City must be at least 2 characters' : 'Please enter a valid city name';
-                setTimeout(() => {
-                    input.style.borderColor = '';
-                    input.placeholder = 'Enter your city';
-                }, 2000);
-                return;
-            }
-        }
-
-        // Zip code validation for step 5 (exactly 5 digits)
-        if (stepIndex === 5) {
+        // Zip code validation for step 2
+        if (stepIndex === 2) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
                 input.style.borderColor = '#ef4444';
-                input.value = '';
-                input.placeholder = 'Enter a valid 5-digit zip code';
+                input.placeholder = 'Please enter a valid 5-digit zip code';
                 setTimeout(() => {
                     input.style.borderColor = '';
                     input.placeholder = 'Enter zip code';
@@ -692,14 +301,13 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Email validation for step 6
-        if (stepIndex === 6) {
+        // Email validation for step 3
+        if (stepIndex === 3) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(value)) {
                 input.focus();
                 input.style.borderColor = '#ef4444';
-                input.value = '';
-                input.placeholder = 'Enter a valid email (e.g. you@email.com)';
+                input.placeholder = 'Please enter a valid email';
                 setTimeout(() => {
                     input.style.borderColor = '';
                     input.placeholder = 'your@email.com';
@@ -708,49 +316,101 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Note: Phone validation (step 7) is now handled by OTP verification handlers
+        // Phone validation for step 4 (basic check)
+        if (stepIndex === 4) {
+            const phoneRegex = /[\d\(\)\-\s]{10,}/;
+            if (!phoneRegex.test(value)) {
+                input.focus();
+                input.style.borderColor = '#ef4444';
+                input.placeholder = 'Please enter a valid phone number';
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                    input.placeholder = '(607) 123-4567';
+                }, 2000);
+                return;
+            }
+        }
 
-        if (stepIndex === 3) {
+        if (stepIndex === 1) {
             userData.name = value;
             updatePersonalizedMessages(value);
-        } else if (stepIndex === 4) {
-            userData.city = value;
-        } else if (stepIndex === 5) {
+        } else if (stepIndex === 2) {
             userData.zip = value;
-        } else if (stepIndex === 6) {
+        } else if (stepIndex === 3) {
             userData.email = value;
-        }
-        // Note: Step 7 (phone) is now handled by OTP verification handlers, not here
+        } else if (stepIndex === 4) {
+            userData.phone = value;
 
-        // After step 6 (email), go to step 7 (phone with OTP verification)
-        // The OTP handlers will take over from there
-        if (stepIndex < 7) {
-            showStep(stepIndex + 1);
+            // Set loading state
+            isSubmitting = true;
+            const btn = document.querySelector('.quiz-btn-next');
+            const originalText = btn ? btn.textContent : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                btn.textContent = '⏳ Submitting...';
+            }
+
+            // SEND TO ZAPIER & GOOGLE SHEETS - function is in global scope
+            const sendSuccess = sendLeadToZapier(userData);
+            
+            if (!sendSuccess) {
+                // Reset if validation failed
+                isSubmitting = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.textContent = originalText;
+                }
+                console.error("❌ Failed to send lead - validation error");
+                alert("There was an error submitting your information. Please check all fields and try again.");
+                return;
+            }
+
+            // Success - proceed to thank you page
+            setTimeout(() => {
+                isSubmitting = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.textContent = originalText;
+                }
+            }, 2000);
         }
-        // Don't auto-advance from step 7 - OTP verification handles that
+
+        // Map input step indices to quizData.steps indices
+        // Input 1 (name/step1) → goes to step2 (index 3)
+        // Input 2 (zip/step2) → goes to step3 (index 4)
+        // Input 3 (email/step3) → goes to step4 (index 5)
+        // Input 4 (phone/step4) → goes to step5 (index 6)
+        const nextStepMap = {
+            1: 3,  // name → zip
+            2: 4,  // zip → email
+            3: 5,  // email → phone
+            4: 6   // phone → success
+        };
+        
+        showStep(nextStepMap[stepIndex]);
     }
 
     function getInputForStep(stepIndex) {
         const inputs = {
-            3: document.getElementById('userName'),
-            4: document.getElementById('userCity'),
-            5: document.getElementById('userZip'),
-            6: document.getElementById('userEmail'),
-            7: document.getElementById('userPhone')
+            1: document.getElementById('userName'),
+            2: document.getElementById('userZip'),
+            3: document.getElementById('userEmail'),
+            4: document.getElementById('userPhone')
         };
         return inputs[stepIndex];
     }
 
     function updatePersonalizedMessages(name) {
+        const step2Title = document.getElementById('step2Title');
+        const step3Title = document.getElementById('step3Title');
         const step4Title = document.getElementById('step4Title');
-        const step5Title = document.getElementById('step5Title');
-        const step6Title = document.getElementById('step6Title');
-        const step7Title = document.getElementById('step7Title');
 
-        if (step4Title) step4Title.textContent = `Hi ${name}! What city are you in?`;
-        if (step5Title) step5Title.textContent = `${name}, what's your zip code?`;
-        if (step6Title) step6Title.textContent = `${name}, what's your email?`;
-        if (step7Title) step7Title.textContent = `Last step ${name}! What's your phone number?`;
+        if (step2Title) step2Title.textContent = `Hi ${name}! What's your zip code?`;
+        if (step3Title) step3Title.textContent = `${name}, what's your email?`;
+        if (step4Title) step4Title.textContent = `Last step ${name}! What's your phone number?`;
     }
 
     function showStep(stepIndex) {
@@ -780,40 +440,18 @@ console.log("Ultimate Garage Floors - script loaded v1.0");
             }
         }
 
-        // Hide footer on success step and OTP step
+        // Hide footer on success step
         const footer = document.getElementById('quizFooter');
         if (footer) {
-            footer.style.display = (stepIndex === 8 || stepIndex === 9) ? 'none' : 'block';
+            footer.style.display = stepIndex === 5 ? 'none' : 'block';
         }
 
         // Log when thank-you page is shown
-        if (stepIndex === 9) {
-            console.log('📄 Thank you page now visible to user');
-            
-            // Update URL for conversion tracking
-            window.history.pushState({}, '', '?thank-you=1');
-            console.log('📍 URL updated to /?thank-you=1 for conversion tracking');
+        if (stepIndex === 5) {
+            console.log('📄 Thank you page (Step 5) now visible to user');
             
             // Remove sticky mode on thank you page
             removeQuizSticky();
-            
-            // Fire Meta Pixel Lead event
-            if (typeof fbq === 'function') {
-                fbq('track', 'Lead', {value: 0.00, currency: 'USD'});
-                console.log("🔥 Meta Pixel Lead event fired");
-            }
-            
-            // Fire Google Ads conversion event
-            if (typeof gtag === 'function') {
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL'
-                });
-                gtag('event', 'generate_lead', {
-                    'event_category': 'Lead',
-                    'event_label': 'Quiz Completion'
-                });
-                console.log("🔥 Google Analytics lead event fired");
-            }
         }
 
         currentStep = stepIndex;
