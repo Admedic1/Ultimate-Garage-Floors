@@ -136,8 +136,8 @@
                             </div>
                             <h2>What's your name?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name">
-                                <button type="button" class="quiz-btn-next">Continue →</button>
+                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name" data-step="2">
+                                <button type="button" class="quiz-btn-next" data-step="2">Continue →</button>
                             </div>
                         </div>
 
@@ -148,8 +148,8 @@
                             </div>
                             <h2 id="step3Title">What's your zip code?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5">
-                                <button type="button" class="quiz-btn-next">Continue →</button>
+                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5" data-step="3">
+                                <button type="button" class="quiz-btn-next" data-step="3">Continue →</button>
                             </div>
                         </div>
 
@@ -160,8 +160,8 @@
                             </div>
                             <h2 id="step4Title">What's your email?</h2>
                             <div class="quiz-question">
-                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com">
-                                <button type="button" class="quiz-btn-next">Continue →</button>
+                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com" data-step="4">
+                                <button type="button" class="quiz-btn-next" data-step="4">Continue →</button>
                             </div>
                         </div>
 
@@ -172,8 +172,8 @@
                             </div>
                             <h2 id="step5Title">What's your phone number?</h2>
                             <div class="quiz-question">
-                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(920) 123-4567">
-                                <button type="button" class="quiz-btn-next">Get My Free Quote →</button>
+                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(920) 123-4567" data-step="5">
+                                <button type="button" class="quiz-btn-next" data-step="5">Get My Free Quote →</button>
                             </div>
                         </div>
 
@@ -629,48 +629,8 @@
         </div>
     </div>
 
-    <!-- Exit Intent Popup -->
-    <div class="exit-popup" id="exitPopup">
-        <div class="exit-popup-content">
-            <h3>⚠️ Wait! Get 10% Off — Call Now!</h3>
-            <p>Don't leave without claiming your <strong>exclusive 10% discount</strong>. Call us right now and mention this offer!</p>
-            <a href="tel:9203673139" class="exit-call-btn" onclick="document.getElementById('exitPopup').style.display='none';">
-                <span class="exit-call-icon">📞</span>
-                <span>TAP TO CALL NOW</span>
-            </a>
-            <p class="exit-popup-urgency">⚡ Only 2 spots left this month!</p>
-        </div>
-    </div>
-
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Exit intent popup - only triggers when user tries to leave the page
-        const exitPopup = document.getElementById('exitPopup');
-        let exitIntentTriggered = false;
-
-        // Show popup when user tries to leave/close the page
-        window.addEventListener('beforeunload', function(e) {
-          if (!exitIntentTriggered) {
-            exitIntentTriggered = true;
-            exitPopup.style.display = 'flex';
-            console.log('🚨 Exit intent detected - popup shown');
-            // Prevent the page from closing immediately to show popup
-            e.preventDefault();
-            e.returnValue = '';
-          }
-        });
-
-        // Also detect when user clicks outside the page (blur event)
-        window.addEventListener('blur', function() {
-          if (!exitIntentTriggered) {
-            exitIntentTriggered = true;
-            exitPopup.style.display = 'flex';
-            console.log('🚨 Window blur detected - popup shown');
-          }
-        });
-
-        // No close button - user MUST engage with the CTA
-
         // Social Proof Popup - cycles through different customers
         const socialProofPopup = document.getElementById('socialProofPopup');
         const proofName = document.getElementById('proofName');
@@ -714,6 +674,6 @@
         setInterval(showSocialProof, 10000);
       });
     </script>
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>

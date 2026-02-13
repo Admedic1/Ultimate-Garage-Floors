@@ -141,8 +141,10 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     };
 
     function initQuiz() {
+        console.log('🚀 initQuiz() called');
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
         const nextButtons = document.querySelectorAll('.quiz-btn-next');
+        console.log('🚀 Found', nextButtons.length, 'next buttons');
 
         quizOptions.forEach(option => {
             option.addEventListener('click', function(e) {
@@ -152,20 +154,26 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             });
         });
 
-        nextButtons.forEach((btn, index) => {
+        nextButtons.forEach((btn) => {
+            const stepAttr = btn.getAttribute('data-step');
+            const stepNum = parseInt(stepAttr);
+            console.log('🟡 Button found with data-step="' + stepAttr + '", parsed as:', stepNum);
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                handleNextStep(index + 1);
+                console.log('🟡 Button clicked! data-step=' + stepAttr + ', calling handleNextStep(' + stepNum + ')');
+                handleNextStep(stepNum);
             });
         });
 
         const inputs = document.querySelectorAll('.quiz-input');
-        inputs.forEach((input, index) => {
+        inputs.forEach((input) => {
+            const stepNum = parseInt(input.getAttribute('data-step'));
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    handleNextStep(index + 1);
+                    console.log('🟡 Enter pressed! Calling handleNextStep(' + stepNum + ')');
+                    handleNextStep(stepNum);
                 }
             });
         });
@@ -254,37 +262,47 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     let isSubmitting = false; // Prevent double submissions
 
     function handleNextStep(stepIndex) {
+        console.log('🔵 handleNextStep called with stepIndex:', stepIndex);
+        
         // Prevent double-clicks during submission
-        if (isSubmitting && stepIndex === 4) {
+        if (isSubmitting && stepIndex === 5) {
             console.log("⚠️ Submission already in progress...");
             return;
         }
 
         const input = getInputForStep(stepIndex);
-        if (!input) return;
+        console.log('🔵 getInputForStep returned:', input);
+        if (!input) {
+            console.log('❌ No input found for stepIndex:', stepIndex);
+            return;
+        }
 
         const value = input.value.trim();
+        console.log('🔵 Trimmed value:', value, 'Length:', value.length);
         
         // Stronger validation: Check for empty values
         if (!value || value.length === 0) {
+            console.log('❌ Validation failed: empty value');
+
             input.focus();
             input.style.borderColor = '#ef4444';
-            input.placeholder = stepIndex === 1 ? 'Please enter your name' : 
-                               stepIndex === 2 ? 'Please enter your zip code' :
-                               stepIndex === 3 ? 'Please enter a valid email' :
+            input.placeholder = stepIndex === 2 ? 'Please enter your name' : 
+                               stepIndex === 3 ? 'Please enter your zip code' :
+                               stepIndex === 4 ? 'Please enter a valid email' :
                                'Please enter your phone number';
             setTimeout(() => {
                 input.style.borderColor = '';
-                input.placeholder = stepIndex === 1 ? 'Enter your name' : 
-                                   stepIndex === 2 ? 'Enter zip code' :
-                                   stepIndex === 3 ? 'your@email.com' :
+                input.placeholder = stepIndex === 2 ? 'Enter your name' : 
+                                   stepIndex === 3 ? 'Enter zip code' :
+                                   stepIndex === 4 ? 'your@email.com' :
                                    '(607) 123-4567';
             }, 2000);
             return;
         }
 
-        // Name validation for step 1 (at least 2 characters)
-        if (stepIndex === 1 && value.length < 2) {
+        // Name validation for step 2 (at least 2 characters)
+        if (stepIndex === 2 && value.length < 2) {
+            console.log('❌ Name validation failed: too short (length:', value.length, ')');
             input.focus();
             input.style.borderColor = '#ef4444';
             input.placeholder = 'Name must be at least 2 characters';
@@ -294,9 +312,11 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             }, 2000);
             return;
         }
+        
+        console.log('✅ Validation passed for step', stepIndex);
 
-        // Zip code validation for step 2
-        if (stepIndex === 2) {
+        // Zip code validation for step 3
+        if (stepIndex === 3) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
@@ -310,8 +330,8 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             }
         }
 
-        // Email validation for step 3
-        if (stepIndex === 3) {
+        // Email validation for step 4
+        if (stepIndex === 4) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(value)) {
                 input.focus();
@@ -325,8 +345,8 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             }
         }
 
-        // Phone validation for step 4 (basic check)
-        if (stepIndex === 4) {
+        // Phone validation for step 5 (basic check)
+        if (stepIndex === 5) {
             const phoneRegex = /[\d\(\)\-\s]{10,}/;
             if (!phoneRegex.test(value)) {
                 input.focus();
@@ -340,14 +360,18 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             }
         }
 
-        if (stepIndex === 1) {
+        if (stepIndex === 2) {
+            console.log('✅ Storing name:', value);
             userData.name = value;
             updatePersonalizedMessages(value);
-        } else if (stepIndex === 2) {
-            userData.zip = value;
         } else if (stepIndex === 3) {
-            userData.email = value;
+            console.log('✅ Storing zip:', value);
+            userData.zip = value;
         } else if (stepIndex === 4) {
+            console.log('✅ Storing email:', value);
+            userData.email = value;
+        } else if (stepIndex === 5) {
+            console.log('✅ Storing phone:', value);
             userData.phone = value;
 
             // Set loading state
@@ -405,6 +429,7 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             5: 6   // phone → success
         };
         
+        console.log('🟢 Validation passed! Going to step:', nextStepMap[stepIndex]);
         showStep(nextStepMap[stepIndex]);
     }
 
@@ -419,23 +444,28 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     }
 
     function updatePersonalizedMessages(name) {
-        const step2Title = document.getElementById('step2Title');
         const step3Title = document.getElementById('step3Title');
         const step4Title = document.getElementById('step4Title');
+        const step5Title = document.getElementById('step5Title');
 
-        if (step2Title) step2Title.textContent = `Hi ${name}! What's your zip code?`;
-        if (step3Title) step3Title.textContent = `${name}, what's your email?`;
-        if (step4Title) step4Title.textContent = `Last step ${name}! What's your phone number?`;
+        if (step3Title) step3Title.textContent = `Hi ${name}! What's your zip code?`;
+        if (step4Title) step4Title.textContent = `${name}, what's your email?`;
+        if (step5Title) step5Title.textContent = `Last step ${name}! What's your phone number?`;
     }
 
     function showStep(stepIndex) {
+        console.log('🟣 showStep called with stepIndex:', stepIndex);
+        console.log('🟣 Step ID to show:', quizData.steps[stepIndex]);
+        
         document.querySelectorAll('.quiz-step').forEach(step => {
             step.classList.add('hidden');
         });
 
         const currentStepEl = document.getElementById(quizData.steps[stepIndex]);
+        console.log('🟣 Step element found:', currentStepEl);
         if (currentStepEl) {
             currentStepEl.classList.remove('hidden');
+            console.log('✅ Step', stepIndex, 'is now visible');
 
             const progressBar = currentStepEl.querySelector('.progress-bar');
             if (progressBar) progressBar.style.width = quizData.progress[stepIndex] + '%';
@@ -458,12 +488,12 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         // Hide footer on success step
         const footer = document.getElementById('quizFooter');
         if (footer) {
-            footer.style.display = stepIndex === 5 ? 'none' : 'block';
+            footer.style.display = stepIndex === 6 ? 'none' : 'block';
         }
 
         // Log when thank-you page is shown
-        if (stepIndex === 5) {
-            console.log('📄 Thank you page (Step 5) now visible to user');
+        if (stepIndex === 6) {
+            console.log('📄 Thank you page (Step 6) now visible to user');
             
             // Remove sticky mode on thank you page
             removeQuizSticky();
