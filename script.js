@@ -26,9 +26,12 @@ function sendLeadToZapier(userData) {
   let zapierSuccess = false;
   let sheetsSuccess = false;
   
-  // Send to Zapier (primary) - UPDATE WITH YOUR OWN WEBHOOK URL
-  fetch("https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_HERE", {
+  // Send to Zapier (primary)
+  fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(payload)
   })
   .then(response => {
@@ -49,6 +52,9 @@ function sendLeadToZapier(userData) {
   if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
     fetch(GOOGLE_SHEET_URL, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(payload)
     })
     .then(response => {
