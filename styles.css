@@ -652,6 +652,10 @@ body {
   color: transparent;
 }
 
+.text-purple {
+  color: var(--purple) !important;
+}
+
 .hero-sub {
   margin-top: 0.75rem;
   color: var(--text-soft);
@@ -976,6 +980,12 @@ body.quiz-modal-open {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
 
 .quiz-option {

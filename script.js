@@ -136,8 +136,8 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5'],
-        progress: [0, 25, 45, 65, 85, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6'],
+        progress: [0, 15, 30, 50, 70, 85, 100]
     };
 
     function initQuiz() {
@@ -196,7 +196,21 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             // Make quiz sticky/modal when user engages
             setTimeout(() => {
                 makeQuizSticky();
-                showStep(1); // Go to name step (index 1 in array)
+                showStep(1); // Go to space type step (index 1 in array)
+            }, 300);
+        }
+
+        // Handle space type question (step1)
+        if (answer === 'garage' || answer === 'basement' || answer === 'outdoor' || answer === 'commercial') {
+            document.querySelectorAll('#step1 .quiz-option').forEach(opt => {
+                opt.classList.remove('quiz-option-primary');
+            });
+            this.classList.add('quiz-option-primary');
+
+            userData.spaceType = answer;
+            
+            setTimeout(() => {
+                showStep(2); // Go to name step (index 2 in array)
             }, 300);
         }
     }
@@ -363,6 +377,12 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             }
 
             // Success - proceed to thank you page
+            // Fire Meta Pixel Lead event
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Lead');
+                console.log('✅ Meta Pixel Lead event fired');
+            }
+            
             setTimeout(() => {
                 isSubmitting = false;
                 if (btn) {
@@ -374,15 +394,15 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         }
 
         // Map input step indices to quizData.steps indices
-        // Input 1 (name/step1) → goes to step2 (index 2)
-        // Input 2 (zip/step2) → goes to step3 (index 3)
-        // Input 3 (email/step3) → goes to step4 (index 4)
-        // Input 4 (phone/step4) → goes to step5 (index 5)
+        // Step 2 (name) → goes to step 3 (zip)
+        // Step 3 (zip) → goes to step 4 (email)
+        // Step 4 (email) → goes to step 5 (phone)
+        // Step 5 (phone) → goes to step 6 (success)
         const nextStepMap = {
-            1: 2,  // name → zip
-            2: 3,  // zip → email
-            3: 4,  // email → phone
-            4: 5   // phone → success
+            2: 3,  // name → zip
+            3: 4,  // zip → email
+            4: 5,  // email → phone
+            5: 6   // phone → success
         };
         
         showStep(nextStepMap[stepIndex]);
@@ -390,10 +410,10 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
 
     function getInputForStep(stepIndex) {
         const inputs = {
-            1: document.getElementById('userName'),
-            2: document.getElementById('userZip'),
-            3: document.getElementById('userEmail'),
-            4: document.getElementById('userPhone')
+            2: document.getElementById('userName'),
+            3: document.getElementById('userZip'),
+            4: document.getElementById('userEmail'),
+            5: document.getElementById('userPhone')
         };
         return inputs[stepIndex];
     }

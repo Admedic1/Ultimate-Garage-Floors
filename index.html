@@ -1,10 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1193510146187240');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1193510146187240&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Epoxy Solutions - Get Your Free Quote</title>
-    <meta name="description" content="Transform your ugly stained concrete with Custom Epoxy Solutions premium epoxy coatings. Serving Denmark, Wisconsin homeowners. Get your free quote today.">
+    <meta name="description" content="Transform your ugly stained concrete with Custom Epoxy Solutions premium epoxy coatings. Serving Wisconsin, Wisconsin homeowners. Get your free quote today.">
     <link rel="stylesheet" href="styles.css">
     
     <style>
@@ -20,7 +38,7 @@
         <div class="container">
             <div class="top-banner-content">
                 <span class="badge-new">NEW</span>
-                <span class="banner-text">This is what smart Denmark residents are doing.</span>
+                <span class="banner-text">This is what smart Wisconsin residents are doing.</span>
             </div>
         </div>
     </div>
@@ -55,24 +73,24 @@
     <section class="hero section">
         <div class="container">
             <div class="hero-simple">
-                <!-- Variant A: Bullets -->
+                <!-- Variant A: Before/After Image -->
                 <div id="variantA" class="ab-variant">
-                    <h1 class="hero-headline-main">Denmark — Set Up Your <span class="text-gradient">Dream Garage Floor</span> Today</h1>
+                    <h1 class="hero-headline-main"><span class="text-purple">Wisconsin</span> — Transform Your Cracked, Stained Concrete <span class="text-gradient">in 1 Day</span></h1>
+                    
+                    <div class="ab-test-image">
+                        <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
+                    </div>
+                </div>
+                
+                <!-- Variant B: Bullets -->
+                <div id="variantB" class="ab-variant" style="display: none;">
+                    <h1 class="hero-headline-main"><span class="text-purple">Wisconsin</span> — Transform Your Cracked, Stained Concrete <span class="text-gradient">in 1 Day</span></h1>
                     
                     <ul class="hero-benefits">
                         <li><span class="benefit-check">✓</span> No more cracks</li>
                         <li><span class="benefit-check">✓</span> No more stains</li>
                         <li><span class="benefit-check">✓</span> Easy cleaning</li>
                     </ul>
-                </div>
-                
-                <!-- Variant B: Before/After Image -->
-                <div id="variantB" class="ab-variant" style="display: none;">
-                    <h1 class="hero-headline-main">Fix Your Cracked, Stained Concrete <span class="text-gradient">in One Day</span></h1>
-                    
-                    <div class="ab-test-image">
-                        <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
-                    </div>
                 </div>
                 
                 <div class="hero-quiz">
@@ -97,10 +115,24 @@
                             </div>
                         </div>
 
-                        <!-- Name Step -->
+                        <!-- Space Type Step -->
                         <div class="quiz-step hidden" id="step1">
+                            <span class="step-label">STEP 2</span>
+                            <div class="quiz-question">
+                                <p class="quiz-question-text">What space would you like coated?</p>
+                                <div class="quiz-options quiz-options-grid">
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="garage">Garage</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="basement">Basement</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="outdoor">Outdoor</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="commercial">Commercial</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Name Step -->
+                        <div class="quiz-step hidden" id="step2">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 25%"></div>
+                                <div class="progress-bar" style="width: 30%"></div>
                             </div>
                             <h2>What's your name?</h2>
                             <div class="quiz-question">
@@ -110,11 +142,11 @@
                         </div>
 
                         <!-- Zip Code Step -->
-                        <div class="quiz-step hidden" id="step2">
+                        <div class="quiz-step hidden" id="step3">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 45%"></div>
+                                <div class="progress-bar" style="width: 50%"></div>
                             </div>
-                            <h2 id="step2Title">What's your zip code?</h2>
+                            <h2 id="step3Title">What's your zip code?</h2>
                             <div class="quiz-question">
                                 <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
@@ -122,11 +154,11 @@
                         </div>
 
                         <!-- Email Step -->
-                        <div class="quiz-step hidden" id="step3">
+                        <div class="quiz-step hidden" id="step4">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 65%"></div>
+                                <div class="progress-bar" style="width: 70%"></div>
                             </div>
-                            <h2 id="step3Title">What's your email?</h2>
+                            <h2 id="step4Title">What's your email?</h2>
                             <div class="quiz-question">
                                 <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com">
                                 <button type="button" class="quiz-btn-next">Continue →</button>
@@ -134,11 +166,11 @@
                         </div>
 
                         <!-- Phone Step -->
-                        <div class="quiz-step hidden" id="step4">
+                        <div class="quiz-step hidden" id="step5">
                             <div class="quiz-progress">
                                 <div class="progress-bar" style="width: 85%"></div>
                             </div>
-                            <h2 id="step4Title">What's your phone number?</h2>
+                            <h2 id="step5Title">What's your phone number?</h2>
                             <div class="quiz-question">
                                 <input type="tel" class="quiz-input" id="userPhone" placeholder="(920) 123-4567">
                                 <button type="button" class="quiz-btn-next">Get My Free Quote →</button>
@@ -146,7 +178,7 @@
                         </div>
 
                         <!-- Success Step -->
-                        <div class="quiz-step hidden" id="step5">
+                        <div class="quiz-step hidden" id="step6">
                             <div class="quiz-success">
                                 <div class="call-cta-box">
                                     <h1 class="thank-you-title">THANK YOU</h1>
@@ -181,7 +213,7 @@
                     <div class="trust-bar-stars">⭐⭐⭐⭐⭐</div>
                     <div class="trust-bar-text">
                         <span class="trust-bar-rating">Rated 5.0</span>
-                        <span class="trust-bar-by">by Denmark Homeowners</span>
+                        <span class="trust-bar-by">by Wisconsin Homeowners</span>
                     </div>
                 </div>
                 <div class="trust-bar-center">
@@ -213,7 +245,7 @@
                 </div>
                 <div class="mascot-right">
                     <h3 class="mascot-headline">20 Years of Trusted Experience</h3>
-                    <p class="mascot-text">You're in good hands — Denmark homeowners have trusted us for two decades. We've seen it all and fixed it all.</p>
+                    <p class="mascot-text">You're in good hands — Wisconsin homeowners have trusted us for two decades. We've seen it all and fixed it all.</p>
                 </div>
             </div>
         </div>
@@ -224,7 +256,7 @@
         <div class="container">
             <div class="section-header center">
                 <h2>Introducing the Garage Rescue Plan</h2>
-                <p class="section-sub">See how Denmark homeowners are saving their concrete before winter hits.</p>
+                <p class="section-sub">See how Wisconsin homeowners are transforming their concrete this spring.</p>
             </div>
             <div class="rescue-steps-grid">
                 <div class="rescue-step-card">
@@ -243,7 +275,7 @@
                     <div class="rescue-step-number">3</div>
                     <div class="rescue-step-icon">⚡</div>
                     <h3>3. Get a 1-Day Transformation</h3>
-                    <p>Our experienced team installs your coating in one day, leaving you with a clean, durable, winter-proof floor that lasts 15+ years.</p>
+                    <p>Our experienced team installs your coating in one day, leaving you with a clean, durable, durable floor that lasts 15+ years.</p>
                 </div>
             </div>
             <div class="cta-center">
@@ -267,7 +299,7 @@
                 <div class="value-card">
                     <div class="value-number">3,000+</div>
                     <h3>Happy Customers</h3>
-                    <p>Join thousands of satisfied Denmark area homeowners who've transformed their concrete surfaces.</p>
+                    <p>Join thousands of satisfied Wisconsin area homeowners who've transformed their concrete surfaces.</p>
                 </div>
                 <div class="value-card">
                     <div class="value-number">1 Day</div>
@@ -320,11 +352,11 @@
         </div>
     </section>
 
-    <!-- Why Before Winter Section -->
+    <!-- Why This Spring Section -->
     <section class="section">
         <div class="container">
             <div class="section-header center">
-                <h2>Why Install Before Winter?</h2>
+                <h2>Why Install This Spring?</h2>
                 <p class="section-sub">Don't wait until it's too late - protect your concrete now</p>
             </div>
             <div class="compare-grid">
@@ -350,7 +382,7 @@
                 </div>
             </div>
             <div class="cta-center">
-                <button class="btn btn-primary btn-lg">Get Protected Before Winter →</button>
+                <button class="btn btn-primary btn-lg">Get Protected This Spring →</button>
             </div>
         </div>
     </section>
@@ -360,7 +392,7 @@
         <div class="container">
             <div class="section-header center">
                 <h2>Why Choose Custom Epoxy Solutions?</h2>
-                <p class="section-sub">Denmark's most experienced epoxy flooring specialists</p>
+                <p class="section-sub">Wisconsin's most experienced epoxy flooring specialists</p>
             </div>
             <div class="steps-grid">
                 <div class="step-card">
@@ -376,7 +408,7 @@
                 <div class="step-card">
                     <div class="step-number">3</div>
                     <h3>Proven Results</h3>
-                    <p>3,000+ successful installations in the Denmark area. Our coatings have withstood 20 Wisconsin winters.</p>
+                    <p>3,000+ successful installations in the Wisconsin area. Our coatings have withstood 20 years of Wisconsin weather.</p>
                 </div>
                 <div class="step-card">
                     <div class="step-number">4</div>
@@ -391,7 +423,7 @@
                 <div class="step-card">
                     <div class="step-number">6</div>
                     <h3>Local & Trusted</h3>
-                    <p>Denmark's most trusted epoxy flooring specialists. We're your neighbors, and we stand behind our work.</p>
+                    <p>Wisconsin's most trusted epoxy flooring specialists. We're your neighbors, and we stand behind our work.</p>
                 </div>
             </div>
         </div>
@@ -407,7 +439,7 @@
                     <span class="reviews-header-count">5.0 rating from 97+ reviews</span>
                 </div>
                 <h2>Happy Customers Getting Their Surfaces Coated</h2>
-                <p class="section-sub">See what Denmark area homeowners are saying</p>
+                <p class="section-sub">See what Wisconsin area homeowners are saying</p>
             </div>
             <div class="proof-grid">
                 <div class="proof-card">
@@ -415,7 +447,7 @@
                         <img src="https://i.pravatar.cc/80?img=12" alt="Robert K." class="proof-avatar">
                         <div class="proof-header-info">
                             <div class="proof-name-inline">Robert K.</div>
-                            <div class="proof-location">Denmark, WI</div>
+                            <div class="proof-location">Wisconsin, WI</div>
                         </div>
                         <div class="proof-stars">★★★★★</div>
                     </div>
@@ -433,7 +465,7 @@
                         <div class="proof-stars">★★★★★</div>
                     </div>
                     <h3>"Best investment we've made"</h3>
-                    <p>The team's experience really shows. They handled everything professionally and the finish is flawless. Five winters later, it still looks perfect.</p>
+                    <p>The team's experience really shows. They handled everything professionally and the finish is flawless. Five years later, it still looks perfect.</p>
                     <div class="proof-verified">✓ Verified Customer</div>
                 </div>
                 <div class="proof-card">
@@ -459,7 +491,7 @@
                         <div class="proof-stars">★★★★★</div>
                     </div>
                     <h3>"No more slippery floors!"</h3>
-                    <p>Was worried about my wife slipping in the garage during winter. The textured finish they applied is perfect - looks great AND safe. Highly recommend!</p>
+                    <p>Was worried about my wife slipping in the garage. The textured finish they applied is perfect - looks great AND safe. Highly recommend!</p>
                     <div class="proof-verified">✓ Verified Customer</div>
                 </div>
                 <div class="proof-card">
@@ -530,7 +562,7 @@
         <div class="container">
             <div class="value-price-block">
                 <h2>How much does this cost?</h2>
-                <p class="value-price-answer">Most Denmark homeowners invest $4–7k depending on size and condition. We deliver a premium epoxy coating that increases home value, lasts for decades, and is installed in one day.</p>
+                <p class="value-price-answer">Most Wisconsin homeowners invest $4–7k depending on size and condition. We deliver a premium epoxy coating that increases home value, lasts for decades, and is installed in one day.</p>
             </div>
         </div>
     </section>
@@ -552,7 +584,7 @@
                 </div>
                 <div class="faq-item">
                     <h3>When Should I Get Epoxy Coating?</h3>
-                    <p>You should consider coating if your concrete is stained, cracked, or you want to protect it from winter damage. The best time is before winter to protect against salt and freeze-thaw cycles.</p>
+                    <p>You should consider coating if your concrete is stained, cracked, or you want to protect it from damage. Spring is the perfect time to get your floors coated before summer activities begin.</p>
                 </div>
                 <div class="faq-item">
                     <h3>Is It Guaranteed To Work?</h3>
@@ -576,7 +608,7 @@
             <div class="final-cta-inner">
                 <div class="final-cta-text">
                     <h2>Don't Wait Until It's Too Late</h2>
-                    <p>The harsh Wisconsin winter is coming. Protect your concrete now before salt and ice cause permanent damage. Only 2 spots available this month.</p>
+                    <p>Spring is the perfect time to transform your floors. Get your concrete coated now before our schedule fills up. Only 2 spots available this month.</p>
                 </div>
                 <div class="final-cta-button">
                     <button class="btn btn-primary btn-lg">Get My Free Quote →</button>
@@ -590,7 +622,7 @@
         <div class="social-proof-content">
             <div class="social-proof-icon">🏠</div>
             <div class="social-proof-text">
-                <p class="social-proof-name" id="proofName">Robert from Denmark, WI</p>
+                <p class="social-proof-name" id="proofName">Robert from Wisconsin, WI</p>
                 <p class="social-proof-action" id="proofAction">Just got his garage coated</p>
                 <p class="social-proof-time" id="proofTime">2 days ago</p>
             </div>
@@ -612,25 +644,28 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Exit intent popup - only triggers on true exit intent
+        // Exit intent popup - only triggers when user tries to leave the page
         const exitPopup = document.getElementById('exitPopup');
         let exitIntentTriggered = false;
-        let mouseLeaveTime = null;
 
-        // Track mouse leaving viewport
-        document.addEventListener('mouseleave', function(e) {
-          if (!exitIntentTriggered && e.clientY <= 0) {
-            // Mouse left through the top of the viewport
-            mouseLeaveTime = Date.now();
-            
-            // Show popup immediately on exit intent
-            setTimeout(function() {
-              if (!exitIntentTriggered) {
-                exitIntentTriggered = true;
-                exitPopup.style.display = 'flex';
-                console.log('🚨 Exit intent detected - popup shown');
-              }
-            }, 100);
+        // Show popup when user tries to leave/close the page
+        window.addEventListener('beforeunload', function(e) {
+          if (!exitIntentTriggered) {
+            exitIntentTriggered = true;
+            exitPopup.style.display = 'flex';
+            console.log('🚨 Exit intent detected - popup shown');
+            // Prevent the page from closing immediately to show popup
+            e.preventDefault();
+            e.returnValue = '';
+          }
+        });
+
+        // Also detect when user clicks outside the page (blur event)
+        window.addEventListener('blur', function() {
+          if (!exitIntentTriggered) {
+            exitIntentTriggered = true;
+            exitPopup.style.display = 'flex';
+            console.log('🚨 Window blur detected - popup shown');
           }
         });
 
@@ -643,13 +678,13 @@
         const proofTime = document.getElementById('proofTime');
         
         const socialProofs = [
-          { name: 'Robert from Denmark, WI', time: '2 days ago', gender: 'male' },
+          { name: 'Robert from Wisconsin, WI', time: '2 days ago', gender: 'male' },
           { name: 'Susan from Green Bay, WI', time: '3 days ago', gender: 'female' },
           { name: 'Michael from De Pere, WI', time: '5 days ago', gender: 'male' },
           { name: 'Patricia from Kewaunee, WI', time: '1 week ago', gender: 'female' },
           { name: 'William from Luxemburg, WI', time: '1 week ago', gender: 'male' },
           { name: 'Barbara from Algoma, WI', time: '2 weeks ago', gender: 'female' },
-          { name: 'Richard from Denmark, WI', time: '2 weeks ago', gender: 'male' },
+          { name: 'Richard from Wisconsin, WI', time: '2 weeks ago', gender: 'male' },
           { name: 'Elizabeth from Mishicot, WI', time: '3 weeks ago', gender: 'female' }
         ];
         
