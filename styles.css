@@ -778,6 +778,22 @@ body {
 
 /* Quiz card */
 
+.quiz-micro-copy {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+.quiz-consent-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin-top: 0.75rem;
+  line-height: 1.4;
+}
+
 .quiz-card {
   background: #5C45F7 !important;
   border-radius: 30px !important;
