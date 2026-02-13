@@ -26,13 +26,17 @@ function sendLeadToZapier(userData) {
   let zapierSuccess = false;
   let sheetsSuccess = false;
   
-  // Send to Zapier (primary)
+  // Send to Zapier (primary) - using form data for better compatibility
+  const formData = new FormData();
+  formData.append('name', payload.name);
+  formData.append('zip', payload.zip);
+  formData.append('email', payload.email);
+  formData.append('phone', payload.phone);
+  formData.append('ab_variant', payload.ab_variant);
+  
   fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
+    body: formData
   })
   .then(response => {
     zapierSuccess = response.ok;
