@@ -382,6 +382,46 @@ body {
   color: var(--text);
 }
 
+.hero-subtext {
+  font-size: 1rem;
+  color: var(--text-soft);
+  margin: 0.5rem 0 1rem;
+  text-align: center;
+}
+
+.image-caption {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.hero-social-proof {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.proof-badge {
+  background: rgba(92, 69, 247, 0.1);
+  color: var(--primary);
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quiz-question-sub {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
 .headline-location {
   color: var(--primary);
   font-weight: 900;
