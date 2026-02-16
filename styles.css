@@ -1686,6 +1686,17 @@ body.quiz-modal-open {
   font-size: 0.9rem;
 }
 
+.compare-list {
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.compare-list li {
+  padding: 0.4rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 .compare-card.bad {
   background: #fef2f2;
   border-color: #fecaca;
