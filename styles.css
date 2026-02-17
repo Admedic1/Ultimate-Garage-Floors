@@ -397,6 +397,26 @@ body {
   margin-top: 0.75rem;
 }
 
+.image-google-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.google-stars {
+  color: #fbbc04;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.google-rating-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
 .hero-social-proof {
   display: flex;
   justify-content: center;
