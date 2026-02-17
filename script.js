@@ -20,8 +20,6 @@ function sendLeadToZapier(userData) {
     ab_variant: window.abTestVariant || 'unknown'
   };
   
-  console.log("✅ Validation passed. Sending lead to Zapier and Google Sheets:", payload);
-  console.log("Payload JSON string:", JSON.stringify(payload));
   
   let zapierSuccess = false;
   let sheetsSuccess = false;
@@ -40,11 +38,9 @@ function sendLeadToZapier(userData) {
   })
   .then(response => {
     zapierSuccess = response.ok;
-    console.log(zapierSuccess ? "✅ Zapier response status:" : "⚠️ Zapier response status:", response.status);
     return response.text();
   })
   .then(data => {
-    console.log("Zapier response data:", data);
   })
   .catch(error => {
     console.error("❌ Error sending lead to Zapier:", error);
@@ -63,23 +59,19 @@ function sendLeadToZapier(userData) {
     })
     .then(response => {
       sheetsSuccess = response.ok;
-      console.log(sheetsSuccess ? "✅ Google Sheets backup status:" : "⚠️ Google Sheets backup status:", response.status);
       return response.json();
     })
     .then(data => {
-      console.log("Google Sheets backup response:", data);
     })
     .catch(error => {
       console.error("❌ Error sending to Google Sheets backup:", error);
     });
   } else {
-    console.warn("⚠️ Google Sheets backup URL not configured yet");
   }
   
   return true;
 }
 
-console.log("Custom Epoxy Solutions - script loaded v1.0");
 
 // -------------------------------------------------
 //          A/B TEST LOGIC
@@ -95,7 +87,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     if (forcedVariant === 'A' || forcedVariant === 'B') {
         variant = forcedVariant;
         localStorage.setItem('ab_test_variant', variant);
-        console.log('🧪 A/B Test: Forced to Variant', variant, '(via URL)');
     } else {
         // Check if user already has an assigned variant
         variant = localStorage.getItem('ab_test_variant');
@@ -104,9 +95,7 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         if (!variant) {
             variant = Math.random() < 0.5 ? 'A' : 'B';
             localStorage.setItem('ab_test_variant', variant);
-            console.log('🧪 A/B Test: New visitor assigned to Variant', variant);
         } else {
-            console.log('🧪 A/B Test: Returning visitor - Variant', variant);
         }
     }
     
@@ -121,11 +110,9 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         if (variant === 'A') {
             if (variantA) variantA.style.display = 'block';
             if (variantB) variantB.style.display = 'none';
-            console.log('🧪 A/B Test: Showing Variant A (bullets)');
         } else {
             if (variantA) variantA.style.display = 'none';
             if (variantB) variantB.style.display = 'block';
-            console.log('🧪 A/B Test: Showing Variant B (before/after image)');
         }
     }
     
@@ -151,10 +138,8 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     };
 
     function initQuiz() {
-        console.log('🚀 initQuiz() called');
         const quizOptions = document.querySelectorAll('.quiz-option[data-answer]');
         const nextButtons = document.querySelectorAll('.quiz-btn-next');
-        console.log('🚀 Found', nextButtons.length, 'next buttons');
 
         quizOptions.forEach(option => {
             option.addEventListener('click', function(e) {
@@ -167,11 +152,9 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         nextButtons.forEach((btn) => {
             const stepAttr = btn.getAttribute('data-step');
             const stepNum = parseInt(stepAttr);
-            console.log('🟡 Button found with data-step="' + stepAttr + '", parsed as:', stepNum);
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🟡 Button clicked! data-step=' + stepAttr + ', calling handleNextStep(' + stepNum + ')');
                 handleNextStep(stepNum);
             });
         });
@@ -182,7 +165,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    console.log('🟡 Enter pressed! Calling handleNextStep(' + stepNum + ')');
                     handleNextStep(stepNum);
                 }
             });
@@ -266,33 +248,26 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         // Insert overlay before quiz card
         quizCard.parentNode.insertBefore(overlay, quizCard);
         
-        console.log('✅ Quiz is now sticky - user locked in!');
     }
 
     let isSubmitting = false; // Prevent double submissions
 
     function handleNextStep(stepIndex) {
-        console.log('🔵 handleNextStep called with stepIndex:', stepIndex);
         
         // Prevent double-clicks during submission
         if (isSubmitting && stepIndex === 5) {
-            console.log("⚠️ Submission already in progress...");
             return;
         }
 
         const input = getInputForStep(stepIndex);
-        console.log('🔵 getInputForStep returned:', input);
         if (!input) {
-            console.log('❌ No input found for stepIndex:', stepIndex);
             return;
         }
 
         const value = input.value.trim();
-        console.log('🔵 Trimmed value:', value, 'Length:', value.length);
         
         // Stronger validation: Check for empty values
         if (!value || value.length === 0) {
-            console.log('❌ Validation failed: empty value');
 
             input.focus();
             input.style.borderColor = '#ef4444';
@@ -312,7 +287,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
 
         // Name validation for step 2 (at least 2 characters)
         if (stepIndex === 2 && value.length < 2) {
-            console.log('❌ Name validation failed: too short (length:', value.length, ')');
             input.focus();
             input.style.borderColor = '#ef4444';
             input.placeholder = 'Name must be at least 2 characters';
@@ -323,7 +297,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             return;
         }
         
-        console.log('✅ Validation passed for step', stepIndex);
 
         // Zip code validation for step 3
         if (stepIndex === 3) {
@@ -371,17 +344,13 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         }
 
         if (stepIndex === 2) {
-            console.log('✅ Storing name:', value);
             userData.name = value;
             updatePersonalizedMessages(value);
         } else if (stepIndex === 3) {
-            console.log('✅ Storing zip:', value);
             userData.zip = value;
         } else if (stepIndex === 4) {
-            console.log('✅ Storing email:', value);
             userData.email = value;
         } else if (stepIndex === 5) {
-            console.log('✅ Storing phone:', value);
             userData.phone = value;
 
             // Set loading state
@@ -414,7 +383,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             // Fire Meta Pixel Lead event
             if (typeof fbq !== 'undefined') {
                 fbq('track', 'Lead');
-                console.log('✅ Meta Pixel Lead event fired');
             }
             
             setTimeout(() => {
@@ -439,7 +407,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
             5: 6   // phone → success
         };
         
-        console.log('🟢 Validation passed! Going to step:', nextStepMap[stepIndex]);
         showStep(nextStepMap[stepIndex]);
     }
 
@@ -464,18 +431,14 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
     }
 
     function showStep(stepIndex) {
-        console.log('🟣 showStep called with stepIndex:', stepIndex);
-        console.log('🟣 Step ID to show:', quizData.steps[stepIndex]);
         
         document.querySelectorAll('.quiz-step').forEach(step => {
             step.classList.add('hidden');
         });
 
         const currentStepEl = document.getElementById(quizData.steps[stepIndex]);
-        console.log('🟣 Step element found:', currentStepEl);
         if (currentStepEl) {
             currentStepEl.classList.remove('hidden');
-            console.log('✅ Step', stepIndex, 'is now visible');
 
             const progressBar = currentStepEl.querySelector('.progress-bar');
             if (progressBar) progressBar.style.width = quizData.progress[stepIndex] + '%';
@@ -503,7 +466,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
 
         // Log when thank-you page is shown
         if (stepIndex === 6) {
-            console.log('📄 Thank you page (Step 6) now visible to user');
             
             // Remove sticky mode on thank you page
             removeQuizSticky();
@@ -527,7 +489,6 @@ console.log("Custom Epoxy Solutions - script loaded v1.0");
         
         body.classList.remove('quiz-modal-open');
         
-        console.log('✅ Quiz sticky mode removed - user can scroll freely');
     }
 
     function initCTAs() {
