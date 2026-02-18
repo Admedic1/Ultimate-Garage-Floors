@@ -16,8 +16,7 @@ function sendLeadToZapier(userData) {
     name: userData.name.trim(),
     zip: userData.zip.trim(),
     email: userData.email.trim(),
-    phone: userData.phone.trim(),
-    ab_variant: window.abTestVariant || 'unknown'
+    phone: userData.phone.trim()
   };
   
   
@@ -30,7 +29,6 @@ function sendLeadToZapier(userData) {
   formData.append('zip', payload.zip);
   formData.append('email', payload.email);
   formData.append('phone', payload.phone);
-  formData.append('ab_variant', payload.ab_variant);
   
   fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
     method: "POST",
@@ -76,51 +74,6 @@ function sendLeadToZapier(userData) {
 // -------------------------------------------------
 //          A/B TEST LOGIC
 // -------------------------------------------------
-
-(function initABTest() {
-    // Check URL parameter for forced variant (for testing)
-    const urlParams = new URLSearchParams(window.location.search);
-    const forcedVariant = urlParams.get('variant');
-    
-    let variant;
-    
-    if (forcedVariant === 'A' || forcedVariant === 'B') {
-        variant = forcedVariant;
-        localStorage.setItem('ab_test_variant', variant);
-    } else {
-        // Check if user already has an assigned variant
-        variant = localStorage.getItem('ab_test_variant');
-        
-        // If no variant assigned, randomly assign one
-        if (!variant) {
-            variant = Math.random() < 0.5 ? 'A' : 'B';
-            localStorage.setItem('ab_test_variant', variant);
-        } else {
-        }
-    }
-    
-    // Store variant globally for tracking
-    window.abTestVariant = variant;
-    
-    // Show the correct variant immediately (before DOMContentLoaded if possible)
-    function showVariant() {
-        const variantA = document.getElementById('variantA');
-        const variantB = document.getElementById('variantB');
-        
-        if (variant === 'A') {
-            if (variantA) variantA.style.display = 'block';
-            if (variantB) variantB.style.display = 'none';
-        } else {
-            if (variantA) variantA.style.display = 'none';
-            if (variantB) variantB.style.display = 'block';
-        }
-    }
-    
-    // Try immediately, then also on DOMContentLoaded
-    showVariant();
-    document.addEventListener('DOMContentLoaded', showVariant);
-    
-})();
 
 // -------------------------------------------------
 //          QUIZ LOGIC BELOW
