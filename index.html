@@ -85,32 +85,28 @@
     <section class="hero section">
         <div class="container">
             <div class="hero-simple">
-                <!-- Headline -->
-                <h1 class="hero-headline-main"><span class="text-purple">Wisconsin</span> — Transform Your Cracked, Stained Concrete <span class="text-gradient">in 1 Day</span></h1>
+                <!-- Simple Headline with Current Month -->
+                <h1 class="hero-headline-main">Get Your Dream Garage Coating This <span class="text-gradient" id="currentMonth">February</span></h1>
                 
-                <!-- Quiz First - Instantly Visible -->
+                <!-- Before/After Image -->
+                <div class="ab-test-image hero-image-top">
+                    <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
+                </div>
+                
+                <!-- Quiz - Focal Point -->
                 <div class="hero-quiz">
-                    <p class="quiz-micro-copy">After you complete the quiz, a local estimator may call to go over pricing and next steps.</p>
                     <div class="quiz-card quiz-card-purple" id="quizCard">
-                        <!-- Qualification Step (First Question) -->
+                        <!-- Location Step (First Question) -->
                         <div class="quiz-step" id="step0">
-                            <span class="step-label">STEP 1</span>
                             <div class="quiz-question">
-                                <p class="quiz-question-text">Check if your garage qualifies for this 1-day transformation.</p>
-                                <p class="quiz-question-sub">Do you own your home?</p>
+                                <p class="quiz-question-text">Are you in Denmark, WI or nearby?</p>
                                 <div class="quiz-options">
                                     <button type="button" class="quiz-option quiz-option-white" data-answer="yes">Yes</button>
                                     <button type="button" class="quiz-option quiz-option-white" data-answer="no">No</button>
                                 </div>
                             </div>
                             
-                            <p class="hero-urgency">⚡ Only 2 spots left this month</p>
-                            <p class="quiz-time">✓ Takes 30 seconds  ✓ Hassle-free</p>
-                            
-                            <div class="quiz-footer-text">
-                                <p class="consultation-text"><strong>Free consultation</strong> — No obligation</p>
-                                <p class="match-text">We'll match you with the best solution for your property</p>
-                            </div>
+                            <p class="quiz-time">⚡ Only 2 spots left this month</p>
                         </div>
 
                         <!-- Space Type Step -->
@@ -201,22 +197,6 @@
                     </div>
                 </div>
                 
-                <!-- Social Proof Below Quiz -->
-                <div class="hero-social-proof">
-                    <span class="proof-badge">✓ 100+ Installs</span>
-                    <span class="proof-badge">★ 5-Star Rated</span>
-                    <span class="proof-badge">🛡 Lifetime Warranty</span>
-                </div>
-                
-                <!-- Before/After Image Below -->
-                <div class="ab-test-image">
-                    <img src="images/before-after.jpg" alt="Before and After Epoxy Floor Coating" class="before-after-img">
-                    <p class="image-caption">This took 1 day. Not 3 weeks. Not $10,000.</p>
-                    <div class="image-google-rating">
-                        <span class="google-stars">★★★★★</span>
-                        <span class="google-rating-text">5.0 on Google</span>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -725,6 +705,12 @@
         setInterval(showSocialProof, 10000);
       });
     </script>
-    <script src="script.js?v=12" defer></script>
+    <script>
+      // Set current month in headline
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthEl = document.getElementById('currentMonth');
+      if (monthEl) monthEl.textContent = months[new Date().getMonth()];
+    </script>
+    <script src="script.js?v=13" defer></script>
 </body>
 </html>
