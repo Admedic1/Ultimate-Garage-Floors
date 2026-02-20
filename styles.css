@@ -735,7 +735,11 @@ body {
 }
 
 .text-purple {
-  color: var(--purple) !important;
+  background: var(--purple);
+  color: #ffffff !important;
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  font-weight: 800;
 }
 
 .hero-sub {
