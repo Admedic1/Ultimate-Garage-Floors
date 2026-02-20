@@ -132,9 +132,9 @@ function sendLeadToZapier(userData) {
 
         const answer = this.getAttribute('data-answer');
 
-        // Handle location question (step0)
+        // Handle homeowner question (step0)
         if (answer === 'no') {
-            alert('Sorry, we currently only service Denmark, WI and nearby areas.');
+            alert('We primarily work with homeowners. Please have the homeowner fill out the form.');
             return;
         }
 
@@ -144,7 +144,7 @@ function sendLeadToZapier(userData) {
             });
             this.classList.add('quiz-option-primary');
 
-            userData.inServiceArea = answer;
+            userData.homeowner = answer;
             
             // Make quiz sticky/modal when user engages
             setTimeout(() => {
