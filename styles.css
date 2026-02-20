@@ -104,9 +104,9 @@ body {
 }
 
 .top-banner .banner-text {
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 600;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 900;
 }
 
 /* Top Bar Layout */
@@ -125,8 +125,8 @@ body {
 
 .banner-text {
   font-size: 1.1rem;
-  color: white;
-  font-weight: 700;
+  color: #ffffff;
+  font-weight: 900;
   letter-spacing: -0.01em;
 }
 
