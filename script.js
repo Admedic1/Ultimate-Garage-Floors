@@ -134,7 +134,7 @@ function sendLeadToZapier(userData) {
 
         // Handle homeowner question (step0)
         if (answer === 'no') {
-            alert('We primarily work with homeowners. Please have the homeowner fill out the form.');
+            alert('Sorry, we currently only service Wisconsin homeowners.');
             return;
         }
 
