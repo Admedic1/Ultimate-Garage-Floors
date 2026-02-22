@@ -158,7 +158,7 @@ function sendLeadToZapier(userData) {
         // Handle Wisconsin homeowner question (step1)
         if (stepId === 'step1') {
             if (answer === 'no') {
-                alert('Sorry, we currently only service Wisconsin homeowners.');
+                alert('Sorry, we primarily work with homeowners.');
                 return;
             }
             if (answer === 'yes') {
