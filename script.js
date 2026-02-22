@@ -137,7 +137,7 @@ function sendLeadToZapier(userData) {
         // Handle qualifies question (step0)
         if (stepId === 'step0') {
             if (answer === 'no') {
-                alert('Sorry, your garage may not qualify for our upgrade service.');
+                alert('Sorry, we may not be able to help with your garage floor at this time.');
                 return;
             }
             if (answer === 'yes') {
