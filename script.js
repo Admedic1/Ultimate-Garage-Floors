@@ -86,8 +86,8 @@ function sendLeadToZapier(userData) {
     let userData = {};
 
     const quizData = {
-        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6'],
-        progress: [0, 15, 30, 50, 70, 85, 100]
+        steps: ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7'],
+        progress: [0, 10, 20, 30, 50, 70, 85, 100]
     };
 
     function initQuiz() {
@@ -131,31 +131,53 @@ function sendLeadToZapier(userData) {
         }
 
         const answer = this.getAttribute('data-answer');
+        const parentStep = this.closest('.quiz-step');
+        const stepId = parentStep ? parentStep.id : null;
 
-        // Handle homeowner question (step0)
-        if (answer === 'no') {
-            alert('Sorry, we currently only service Wisconsin homeowners.');
+        // Handle qualifies question (step0)
+        if (stepId === 'step0') {
+            if (answer === 'no') {
+                alert('Sorry, your garage may not qualify for our upgrade service.');
+                return;
+            }
+            if (answer === 'yes') {
+                document.querySelectorAll('#step0 .quiz-option').forEach(opt => {
+                    opt.classList.remove('quiz-option-primary');
+                });
+                this.classList.add('quiz-option-primary');
+                userData.qualifies = answer;
+                
+                setTimeout(() => {
+                    makeQuizSticky();
+                    showStep(1); // Go to Wisconsin homeowner question
+                }, 300);
+            }
             return;
         }
 
-        if (answer === 'yes') {
-            document.querySelectorAll('#step0 .quiz-option').forEach(opt => {
-                opt.classList.remove('quiz-option-primary');
-            });
-            this.classList.add('quiz-option-primary');
-
-            userData.homeowner = answer;
-            
-            // Make quiz sticky/modal when user engages
-            setTimeout(() => {
-                makeQuizSticky();
-                showStep(1); // Go to space type step (index 1 in array)
-            }, 300);
+        // Handle Wisconsin homeowner question (step1)
+        if (stepId === 'step1') {
+            if (answer === 'no') {
+                alert('Sorry, we currently only service Wisconsin homeowners.');
+                return;
+            }
+            if (answer === 'yes') {
+                document.querySelectorAll('#step1 .quiz-option').forEach(opt => {
+                    opt.classList.remove('quiz-option-primary');
+                });
+                this.classList.add('quiz-option-primary');
+                userData.homeowner = answer;
+                
+                setTimeout(() => {
+                    showStep(2); // Go to space type step
+                }, 300);
+            }
+            return;
         }
 
-        // Handle space type question (step1)
+        // Handle space type question (step2)
         if (answer === 'garage' || answer === 'basement' || answer === 'outdoor' || answer === 'commercial') {
-            document.querySelectorAll('#step1 .quiz-option').forEach(opt => {
+            document.querySelectorAll('#step2 .quiz-option').forEach(opt => {
                 opt.classList.remove('quiz-option-primary');
             });
             this.classList.add('quiz-option-primary');
@@ -163,7 +185,7 @@ function sendLeadToZapier(userData) {
             userData.spaceType = answer;
             
             setTimeout(() => {
-                showStep(2); // Go to name step (index 2 in array)
+                showStep(3); // Go to name step
             }, 300);
         }
     }
@@ -208,7 +230,7 @@ function sendLeadToZapier(userData) {
     function handleNextStep(stepIndex) {
         
         // Prevent double-clicks during submission
-        if (isSubmitting && stepIndex === 5) {
+        if (isSubmitting && stepIndex === 6) {
             return;
         }
 
@@ -224,22 +246,22 @@ function sendLeadToZapier(userData) {
 
             input.focus();
             input.style.borderColor = '#ef4444';
-            input.placeholder = stepIndex === 2 ? 'Please enter your name' : 
-                               stepIndex === 3 ? 'Please enter your zip code' :
-                               stepIndex === 4 ? 'Please enter a valid email' :
+            input.placeholder = stepIndex === 3 ? 'Please enter your name' : 
+                               stepIndex === 4 ? 'Please enter your zip code' :
+                               stepIndex === 5 ? 'Please enter a valid email' :
                                'Please enter your phone number';
             setTimeout(() => {
                 input.style.borderColor = '';
-                input.placeholder = stepIndex === 2 ? 'Enter your name' : 
-                                   stepIndex === 3 ? 'Enter zip code' :
-                                   stepIndex === 4 ? 'your@email.com' :
-                                   '(607) 123-4567';
+                input.placeholder = stepIndex === 3 ? 'Enter your name' : 
+                                   stepIndex === 4 ? 'Enter zip code' :
+                                   stepIndex === 5 ? 'your@email.com' :
+                                   '(920) 123-4567';
             }, 2000);
             return;
         }
 
-        // Name validation for step 2 (at least 2 characters)
-        if (stepIndex === 2 && value.length < 2) {
+        // Name validation for step 3 (at least 2 characters)
+        if (stepIndex === 3 && value.length < 2) {
             input.focus();
             input.style.borderColor = '#ef4444';
             input.placeholder = 'Name must be at least 2 characters';
@@ -296,14 +318,14 @@ function sendLeadToZapier(userData) {
             }
         }
 
-        if (stepIndex === 2) {
+        if (stepIndex === 3) {
             userData.name = value;
             updatePersonalizedMessages(value);
-        } else if (stepIndex === 3) {
-            userData.zip = value;
         } else if (stepIndex === 4) {
-            userData.email = value;
+            userData.zip = value;
         } else if (stepIndex === 5) {
+            userData.email = value;
+        } else if (stepIndex === 6) {
             userData.phone = value;
 
             // Set loading state
@@ -354,10 +376,10 @@ function sendLeadToZapier(userData) {
         // Step 4 (email) → goes to step 5 (phone)
         // Step 5 (phone) → goes to step 6 (success)
         const nextStepMap = {
-            2: 3,  // name → zip
-            3: 4,  // zip → email
-            4: 5,  // email → phone
-            5: 6   // phone → success
+            3: 4,  // name → zip
+            4: 5,  // zip → email
+            5: 6,  // email → phone
+            6: 7   // phone → success
         };
         
         showStep(nextStepMap[stepIndex]);
@@ -365,22 +387,22 @@ function sendLeadToZapier(userData) {
 
     function getInputForStep(stepIndex) {
         const inputs = {
-            2: document.getElementById('userName'),
-            3: document.getElementById('userZip'),
-            4: document.getElementById('userEmail'),
-            5: document.getElementById('userPhone')
+            3: document.getElementById('userName'),
+            4: document.getElementById('userZip'),
+            5: document.getElementById('userEmail'),
+            6: document.getElementById('userPhone')
         };
         return inputs[stepIndex];
     }
 
     function updatePersonalizedMessages(name) {
-        const step3Title = document.getElementById('step3Title');
         const step4Title = document.getElementById('step4Title');
         const step5Title = document.getElementById('step5Title');
+        const step6Title = document.getElementById('step6Title');
 
-        if (step3Title) step3Title.textContent = `Hi ${name}! What's your zip code?`;
-        if (step4Title) step4Title.textContent = `${name}, what's your email?`;
-        if (step5Title) step5Title.textContent = `Last step ${name}! What's your phone number?`;
+        if (step4Title) step4Title.textContent = `Hi ${name}! What's your zip code?`;
+        if (step5Title) step5Title.textContent = `${name}, what's your email?`;
+        if (step6Title) step6Title.textContent = `Last step ${name}! What's your phone number?`;
     }
 
     function showStep(stepIndex) {

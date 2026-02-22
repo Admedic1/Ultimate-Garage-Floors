@@ -96,8 +96,19 @@
                 <!-- Quiz - Focal Point -->
                 <div class="hero-quiz">
                     <div class="quiz-card quiz-card-purple" id="quizCard">
-                        <!-- Homeowner Step (First Question) -->
+                        <!-- Qualifies Step (First Question) -->
                         <div class="quiz-step" id="step0">
+                            <div class="quiz-question">
+                                <p class="quiz-question-text">See if your garage qualifies for an upgrade</p>
+                                <div class="quiz-options">
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="yes">Yes</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="no">No</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wisconsin Homeowner Step -->
+                        <div class="quiz-step hidden" id="step1">
                             <div class="quiz-question">
                                 <p class="quiz-question-text">Are you a Wisconsin homeowner?</p>
                                 <div class="quiz-options">
@@ -108,8 +119,8 @@
                         </div>
 
                         <!-- Space Type Step -->
-                        <div class="quiz-step hidden" id="step1">
-                            <span class="step-label">STEP 2</span>
+                        <div class="quiz-step hidden" id="step2">
+                            <span class="step-label">STEP 3</span>
                             <div class="quiz-question">
                                 <p class="quiz-question-text">What space would you like coated?</p>
                                 <div class="quiz-options quiz-options-grid">
@@ -122,56 +133,56 @@
                         </div>
 
                         <!-- Name Step -->
-                        <div class="quiz-step hidden" id="step2">
+                        <div class="quiz-step hidden" id="step3">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 30%"></div>
+                                <div class="progress-bar" style="width: 25%"></div>
                             </div>
                             <h2>What's your name?</h2>
                             <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name" data-step="2">
-                                <button type="button" class="quiz-btn-next" data-step="2">Continue →</button>
-                            </div>
-                        </div>
-
-                        <!-- Zip Code Step -->
-                        <div class="quiz-step hidden" id="step3">
-                            <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 50%"></div>
-                            </div>
-                            <h2 id="step3Title">What's your zip code?</h2>
-                            <div class="quiz-question">
-                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5" data-step="3">
+                                <input type="text" class="quiz-input" id="userName" placeholder="Enter your name" data-step="3">
                                 <button type="button" class="quiz-btn-next" data-step="3">Continue →</button>
                             </div>
                         </div>
 
-                        <!-- Email Step -->
+                        <!-- Zip Code Step -->
                         <div class="quiz-step hidden" id="step4">
                             <div class="quiz-progress">
-                                <div class="progress-bar" style="width: 70%"></div>
+                                <div class="progress-bar" style="width: 45%"></div>
                             </div>
-                            <h2 id="step4Title">What's your email?</h2>
+                            <h2 id="step4Title">What's your zip code?</h2>
                             <div class="quiz-question">
-                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com" data-step="4">
+                                <input type="text" class="quiz-input" id="userZip" placeholder="Enter zip code" maxlength="5" data-step="4">
                                 <button type="button" class="quiz-btn-next" data-step="4">Continue →</button>
                             </div>
                         </div>
 
-                        <!-- Phone Step -->
+                        <!-- Email Step -->
                         <div class="quiz-step hidden" id="step5">
+                            <div class="quiz-progress">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+                            <h2 id="step5Title">What's your email?</h2>
+                            <div class="quiz-question">
+                                <input type="email" class="quiz-input" id="userEmail" placeholder="your@email.com" data-step="5">
+                                <button type="button" class="quiz-btn-next" data-step="5">Continue →</button>
+                            </div>
+                        </div>
+
+                        <!-- Phone Step -->
+                        <div class="quiz-step hidden" id="step6">
                             <div class="quiz-progress">
                                 <div class="progress-bar" style="width: 85%"></div>
                             </div>
-                            <h2 id="step5Title">What's your phone number?</h2>
+                            <h2 id="step6Title">What's your phone number?</h2>
                             <div class="quiz-question">
-                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(920) 123-4567" data-step="5">
-                                <button type="button" class="quiz-btn-next" data-step="5">Get My Free Quote →</button>
+                                <input type="tel" class="quiz-input" id="userPhone" placeholder="(920) 123-4567" data-step="6">
+                                <button type="button" class="quiz-btn-next" data-step="6">Get My Free Quote →</button>
                                 <p class="quiz-consent-text">By submitting, you agree to receive a call regarding your estimate. No spam. No pressure.</p>
                             </div>
                         </div>
 
                         <!-- Success Step -->
-                        <div class="quiz-step hidden" id="step6">
+                        <div class="quiz-step hidden" id="step7">
                             <div class="quiz-success">
                                 <div class="call-cta-box">
                                     <h1 class="thank-you-title">THANK YOU</h1>
