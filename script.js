@@ -273,8 +273,8 @@ function sendLeadToZapier(userData) {
         }
         
 
-        // Zip code validation for step 3
-        if (stepIndex === 3) {
+        // Zip code validation for step 4
+        if (stepIndex === 4) {
             const zipRegex = /^\d{5}$/;
             if (!zipRegex.test(value)) {
                 input.focus();
@@ -288,8 +288,8 @@ function sendLeadToZapier(userData) {
             }
         }
 
-        // Email validation for step 4
-        if (stepIndex === 4) {
+        // Email validation for step 5
+        if (stepIndex === 5) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(value)) {
                 input.focus();
@@ -303,8 +303,8 @@ function sendLeadToZapier(userData) {
             }
         }
 
-        // Phone validation for step 5 (basic check)
-        if (stepIndex === 5) {
+        // Phone validation for step 6 (basic check)
+        if (stepIndex === 6) {
             const phoneRegex = /[\d\(\)\-\s]{10,}/;
             if (!phoneRegex.test(value)) {
                 input.focus();
@@ -312,7 +312,7 @@ function sendLeadToZapier(userData) {
                 input.placeholder = 'Please enter a valid phone number';
                 setTimeout(() => {
                     input.style.borderColor = '';
-                    input.placeholder = '(607) 123-4567';
+                    input.placeholder = '(920) 123-4567';
                 }, 2000);
                 return;
             }
