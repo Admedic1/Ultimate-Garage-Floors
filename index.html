@@ -85,13 +85,22 @@
     <section class="hero section">
         <div class="container">
             <div class="hero-simple">
-                <!-- Headline -->
-                <h1 class="hero-headline-main">Apply to Upgrade Your Cracked, Stained Concrete in 1 Day</h1>
+                <!-- Variant A: Get Free Quote Now -->
+                <div id="variantA" class="ab-variant" style="display: none;">
+                    <h1 class="hero-headline-main">Get Free Quote Now</h1>
+                    <div class="hero-checks">
+                        <span class="hero-check">✓ Lifetime Warranty</span>
+                        <span class="hero-check">✓ Installed in One Day</span>
+                    </div>
+                </div>
                 
-                <!-- Checkmarks -->
-                <div class="hero-checks">
-                    <span class="hero-check">✓ Lifetime Warranty</span>
-                    <span class="hero-check">✓ Installed in One Day</span>
+                <!-- Variant B: Add Value -->
+                <div id="variantB" class="ab-variant" style="display: none;">
+                    <h1 class="hero-headline-main">These Concrete Coatings Add Value to Homes</h1>
+                    <div class="hero-checks">
+                        <span class="hero-check">✓ Lifetime Warranty</span>
+                        <span class="hero-check">✓ Installed in One Day</span>
+                    </div>
                 </div>
                 
                 <!-- Quiz - Focal Point -->
@@ -100,9 +109,9 @@
                         <!-- Qualifies Step (First Question) -->
                         <div class="quiz-step" id="step0">
                             <div class="quiz-question">
-                                <p class="quiz-question-text">Get My Quote Today</p>
+                                <p class="quiz-question-text" id="quizStartText">Get My Quote Today</p>
                                 <div class="quiz-options">
-                                    <button type="button" class="quiz-option quiz-option-white" data-answer="yes">Yes — Apply Now</button>
+                                    <button type="button" class="quiz-option quiz-option-white" data-answer="yes" id="quizYesBtn">Yes — Apply Now</button>
                                     <button type="button" class="quiz-option quiz-option-white" data-answer="no">No</button>
                                 </div>
                             </div>

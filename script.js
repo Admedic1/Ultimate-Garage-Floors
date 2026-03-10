@@ -16,7 +16,8 @@ function sendLeadToZapier(userData) {
     name: userData.name.trim(),
     zip: userData.zip.trim(),
     email: userData.email.trim(),
-    phone: userData.phone.trim()
+    phone: userData.phone.trim(),
+    ab_variant: window.abTestVariant || 'unknown'
   };
   
   
@@ -29,7 +30,8 @@ function sendLeadToZapier(userData) {
   formData.append('zip', payload.zip);
   formData.append('email', payload.email);
   formData.append('phone', payload.phone);
-  
+  formData.append('ab_variant', payload.ab_variant);
+
   fetch("https://hooks.zapier.com/hooks/catch/23450484/uaut17y/", {
     method: "POST",
     body: formData
@@ -488,12 +490,42 @@ function sendLeadToZapier(userData) {
         });
     }
 
+    function initABTest() {
+        // Check for existing variant in localStorage or assign randomly
+        let variant = localStorage.getItem('ab_variant');
+        if (!variant) {
+            variant = Math.random() < 0.5 ? 'A' : 'B';
+            localStorage.setItem('ab_variant', variant);
+        }
+        
+        window.abTestVariant = variant;
+        
+        const variantA = document.getElementById('variantA');
+        const variantB = document.getElementById('variantB');
+        const quizStartText = document.getElementById('quizStartText');
+        const quizYesBtn = document.getElementById('quizYesBtn');
+        
+        if (variant === 'A') {
+            if (variantA) variantA.style.display = 'block';
+            if (variantB) variantB.style.display = 'none';
+            if (quizStartText) quizStartText.textContent = 'Get Free Quote Now';
+            if (quizYesBtn) quizYesBtn.textContent = 'Yes — Get Quote';
+        } else {
+            if (variantA) variantA.style.display = 'none';
+            if (variantB) variantB.style.display = 'block';
+            if (quizStartText) quizStartText.textContent = 'Add Value to Your Home';
+            if (quizYesBtn) quizYesBtn.textContent = 'Add Value Now';
+        }
+    }
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
+            initABTest();
             initQuiz();
             initCTAs();
         });
     } else {
+        initABTest();
         initQuiz();
         initCTAs();
     }
