@@ -491,10 +491,17 @@ function sendLeadToZapier(userData) {
     }
 
     function initABTest() {
-        // Check for existing variant in localStorage or assign randomly
+        // Check for existing variant in localStorage or assign randomly (3 variants)
         let variant = localStorage.getItem('ab_variant');
-        if (!variant) {
-            variant = Math.random() < 0.5 ? 'A' : 'B';
+        if (!variant || !['A', 'B', 'C'].includes(variant)) {
+            const rand = Math.random();
+            if (rand < 0.33) {
+                variant = 'A';
+            } else if (rand < 0.66) {
+                variant = 'B';
+            } else {
+                variant = 'C';
+            }
             localStorage.setItem('ab_variant', variant);
         }
         
@@ -502,19 +509,27 @@ function sendLeadToZapier(userData) {
         
         const variantA = document.getElementById('variantA');
         const variantB = document.getElementById('variantB');
+        const variantC = document.getElementById('variantC');
         const quizStartText = document.getElementById('quizStartText');
         const quizYesBtn = document.getElementById('quizYesBtn');
         
+        // Hide all variants first
+        if (variantA) variantA.style.display = 'none';
+        if (variantB) variantB.style.display = 'none';
+        if (variantC) variantC.style.display = 'none';
+        
         if (variant === 'A') {
             if (variantA) variantA.style.display = 'block';
-            if (variantB) variantB.style.display = 'none';
-            if (quizStartText) quizStartText.textContent = 'Get Free Quote Now';
-            if (quizYesBtn) quizYesBtn.textContent = 'Yes — Get Quote';
-        } else {
-            if (variantA) variantA.style.display = 'none';
+            if (quizStartText) quizStartText.textContent = 'Apply Now';
+            if (quizYesBtn) quizYesBtn.textContent = 'Yes — Apply Now';
+        } else if (variant === 'B') {
             if (variantB) variantB.style.display = 'block';
             if (quizStartText) quizStartText.textContent = 'Add Value to Your Home';
             if (quizYesBtn) quizYesBtn.textContent = 'Add Value Now';
+        } else {
+            if (variantC) variantC.style.display = 'block';
+            if (quizStartText) quizStartText.textContent = 'Get Your Free Quote';
+            if (quizYesBtn) quizYesBtn.textContent = 'Yes — Get Quote';
         }
     }
 
