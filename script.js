@@ -139,7 +139,12 @@ function sendLeadToZapier(userData) {
         // Handle qualifies question (step0)
         if (stepId === 'step0') {
             if (answer === 'no') {
-                alert('Sorry, we may not be able to help with your garage floor at this time.');
+                // Different message for variant D (Wisconsin homeowner question)
+                if (window.abTestVariant === 'D') {
+                    alert('Sorry, we currently only service Wisconsin homeowners.');
+                } else {
+                    alert('Sorry, we may not be able to help with your garage floor at this time.');
+                }
                 return;
             }
             if (answer === 'yes') {
@@ -148,10 +153,16 @@ function sendLeadToZapier(userData) {
                 });
                 this.classList.add('quiz-option-primary');
                 userData.qualifies = answer;
-                
+
                 setTimeout(() => {
                     makeQuizSticky();
-                    showStep(1); // Go to Wisconsin homeowner question
+                    // Variant D already asked homeowner question, skip to step 2 (space type)
+                    if (window.abTestVariant === 'D') {
+                        userData.homeowner = 'yes';
+                        showStep(2); // Skip to space type
+                    } else {
+                        showStep(1); // Go to Wisconsin homeowner question
+                    }
                 }, 300);
             }
             return;
@@ -491,16 +502,18 @@ function sendLeadToZapier(userData) {
     }
 
     function initABTest() {
-        // Check for existing variant in localStorage or assign randomly (3 variants)
+        // Check for existing variant in localStorage or assign randomly (4 variants, 25% each)
         let variant = localStorage.getItem('ab_variant');
-        if (!variant || !['A', 'B', 'C'].includes(variant)) {
+        if (!variant || !['A', 'B', 'C', 'D'].includes(variant)) {
             const rand = Math.random();
-            if (rand < 0.33) {
+            if (rand < 0.25) {
                 variant = 'A';
-            } else if (rand < 0.66) {
+            } else if (rand < 0.50) {
                 variant = 'B';
-            } else {
+            } else if (rand < 0.75) {
                 variant = 'C';
+            } else {
+                variant = 'D';
             }
             localStorage.setItem('ab_variant', variant);
         }
@@ -510,13 +523,16 @@ function sendLeadToZapier(userData) {
         const variantA = document.getElementById('variantA');
         const variantB = document.getElementById('variantB');
         const variantC = document.getElementById('variantC');
+        const variantD = document.getElementById('variantD');
         const quizStartText = document.getElementById('quizStartText');
         const quizYesBtn = document.getElementById('quizYesBtn');
+        const step0 = document.getElementById('step0');
         
         // Hide all variants first
         if (variantA) variantA.style.display = 'none';
         if (variantB) variantB.style.display = 'none';
         if (variantC) variantC.style.display = 'none';
+        if (variantD) variantD.style.display = 'none';
         
         if (variant === 'A') {
             if (variantA) variantA.style.display = 'block';
@@ -526,10 +542,15 @@ function sendLeadToZapier(userData) {
             if (variantB) variantB.style.display = 'block';
             if (quizStartText) quizStartText.textContent = 'Add Value to Your Home';
             if (quizYesBtn) quizYesBtn.textContent = 'Add Value Now';
-        } else {
+        } else if (variant === 'C') {
             if (variantC) variantC.style.display = 'block';
             if (quizStartText) quizStartText.textContent = 'Get Your Free Quote';
             if (quizYesBtn) quizYesBtn.textContent = 'Yes — Get Quote';
+        } else {
+            // Variant D: Skip to Wisconsin homeowner question directly
+            if (variantD) variantD.style.display = 'block';
+            if (quizStartText) quizStartText.textContent = 'Are you a Wisconsin homeowner?';
+            if (quizYesBtn) quizYesBtn.textContent = 'Yes';
         }
     }
 
